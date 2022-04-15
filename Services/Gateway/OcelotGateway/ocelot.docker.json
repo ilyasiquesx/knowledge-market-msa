@@ -1,66 +1,66 @@
 ﻿{
-    "Routes": [
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
         {
-            "DownstreamPathTemplate": "/{everything}",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "forum-service",
-                    "Port": 80
-                }
-            ],
-            "UpstreamPathTemplate": "/forum/{everything}",
-            "UpstreamHttpMethod": [
-                "Get",
-                "Put",
-                "Post",
-                "Delete"
-            ]
-        },
-        {
-            "DownstreamPathTemplate": "/account/{everything}",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "auth-service",
-                    "Port": 80
-                }
-            ],
-            "UpstreamPathTemplate": "/auth/{everything}",
-            "UpstreamHttpMethod": [
-                "Post"
-            ]
-        },
-        {
-            "DownstreamPathTemplate": "/mailing",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "mail-service",
-                    "Port": 80
-                }
-            ],
-            "UpstreamPathTemplate": "/mailing/",
-            "UpstreamHttpMethod": [
-                "Get",
-                "Put",
-                "Post",
-                "Delete"
-            ]
-        },
-        {
-            "DownstreamPathTemplate": "/notifications",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "notify-service",
-                    "Port": 80
-                }
-            ],
-            "UpstreamPathTemplate": "/notifications/",
-            "UpstreamHttpMethod": [
-                "Get"
-            ]
+          "Host": "forum-service",
+          "Port": 80
         }
-    ]
+      ],
+      "UpstreamPathTemplate": "/forum/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Put",
+        "Post",
+        "Delete"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/account/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "auth-service",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/{everything}",
+      "UpstreamHttpMethod": [
+        "Post"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/mailing",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mail-service",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/mailing/",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Put",
+        "Post",
+        "Delete"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/notifications",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "notify-service",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/notifications/",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+    }
+  ]
 }

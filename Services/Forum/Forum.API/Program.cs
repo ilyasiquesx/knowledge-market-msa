@@ -1,4 +1,3 @@
-using System.Text;
 using Forum.API.BackgroundTasks;
 using Forum.API.Options;
 using Forum.Core.Entities.Users.Notifications;
@@ -17,7 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ForumContext>(
-    opt => opt.UseNpgsql("Server=localhost;Port=5432;Database=ForumStorage;User Id=postgres;Password=developer1995;"));
+    opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("ForumStorage")));
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>

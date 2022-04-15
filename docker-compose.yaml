@@ -1,0 +1,103 @@
+version: '3.1'
+
+services:
+  
+  db:
+    container_name: knowledge-market-db
+    image: postgres:13-alpine
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: developer1995
+    networks:
+      - knowledge-market-network
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+  
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    networks:
+      - knowledge-market-network
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.16.3
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - knowledge-market-network
+  
+  rabbitmq:
+    container_name: rabbitmq-server
+    image: rabbitmq:3-management
+    ports:
+      - "15675:15672"
+      - "5672:5672"
+    networks:
+      - knowledge-market-network
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+  
+  maildev:
+    container_name: maildev
+    image: maildev/maildev
+    ports:
+      - "1080:80"
+      - "1025:25"
+    networks:
+      - knowledge-market-network
+  
+  gateway:
+    container_name: gateway
+    build:
+      context: .
+      dockerfile: Services/Gateway/OcelotGateway/Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "4900:80"
+    environment:
+      - IsInDocker=true
+    networks:
+      - knowledge-market-network
+  
+  auth-service:
+    container_name: auth-service
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Services/Authentication/Authentication.API/Dockerfile
+    environment:
+      - ConnectionStrings__AuthStorage=Host=db;Port=5432;Database=AuthenticationStorage;Username=postgres;Password=developer1995
+      - RabbitConnection__Hostname=rabbitmq
+      - RabbitConnection__Port=5672
+    networks:
+      - knowledge-market-network
+    depends_on:
+      - db
+      - rabbitmq
+      - elasticsearch
+
+volumes:
+  elasticsearch-data:
+  pg-data:
+  rabbitmq-data:
+
+networks:
+  knowledge-market-network:
+    driver: bridge

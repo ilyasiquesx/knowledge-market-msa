@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AuthContext>(opt =>
 {
     var connectionString = builder.Configuration.GetConnectionString("AuthStorage");
+    Console.WriteLine(connectionString);
     if (connectionString == null)
         throw new ArgumentNullException(nameof(connectionString));
 
