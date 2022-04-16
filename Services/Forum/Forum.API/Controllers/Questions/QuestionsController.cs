@@ -1,5 +1,7 @@
 ﻿using Forum.Core.Entities.Questions.Commands;
 using Forum.Core.Entities.Questions.Queries;
+using Forum.Core.Entities.Questions.Queries.Get;
+using Forum.Core.Entities.Questions.Queries.GetPaginated;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,14 @@ public class QuestionsController : ApiController
     public async Task<IActionResult> GetById(long id)
     {
         var result = await Mediator.Send(new GetQuestionQuery(id));
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetWithPagination([FromQuery] Pagination pagination)
+    {
+        var result = await Mediator.Send(new GetQuestionsQuery(pagination));
         return Ok(result);
     }
 

@@ -31,6 +31,11 @@ public class AccountController : ApiController
             return BadRequest(new { Message = "The credentials for user are wrong" });
 
         var token = _tokenProvider.GetTokenForUser(user);
-        return Ok(new { AccessToken = token });
+        return Ok(new
+        {
+            AccessToken = token,
+            Username = user.UserName,
+            Id = user.Id,
+        });
     }
 }

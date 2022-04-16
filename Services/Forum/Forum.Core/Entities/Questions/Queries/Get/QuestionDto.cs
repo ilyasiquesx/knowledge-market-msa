@@ -1,5 +1,4 @@
-﻿
-namespace Forum.Core.Entities.Questions.Queries;
+﻿namespace Forum.Core.Entities.Questions.Queries.Get;
 
 public class QuestionDto
 {
@@ -9,6 +8,8 @@ public class QuestionDto
     public AnswerDto BestAnswer { get; set; }
     public IEnumerable<AnswerDto> Answers { get; set; }
     public DateTime CreatedAt { get; set; }
+   
+    public bool AvailableToEdit { get; set; }
 }
 
 public class AnswerDto
@@ -17,10 +18,5 @@ public class AnswerDto
     public string Content { get; set; }
     public AuthorDto Author { get; set; }
     public DateTime CreatedAt { get; set; }
-}
-
-public class AuthorDto
-{
-    public string Id { get; set; }
-    public string Username { get; set; }
+    public bool AvailableToEdit { get; set; }
 }

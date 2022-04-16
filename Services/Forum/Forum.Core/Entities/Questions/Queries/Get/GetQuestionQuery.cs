@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Core.Entities.Questions.Queries;
+namespace Forum.Core.Entities.Questions.Queries.Get;
 
 public class GetQuestionQuery : IRequest<QuestionDto>
 {
@@ -17,10 +17,12 @@ public class GetQuestionQuery : IRequest<QuestionDto>
 public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, QuestionDto>
 {
     private readonly IDomainContext _context;
+    private readonly IUserService _userService;
 
-    public GetQuestionQueryHandler(IDomainContext context)
+    public GetQuestionQueryHandler(IDomainContext context, IUserService userService)
     {
         _context = context;
+        _userService = userService;
     }
 
     public async Task<QuestionDto> Handle(GetQuestionQuery request, CancellationToken cancellationToken)
@@ -38,7 +40,7 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
         var author = question!.Author;
         var answers = question.Answers;
         var bestAnswer = question.BestAnswer;
-        
+
         AnswerDto bestAnswerDto = null;
         if (bestAnswer != null)
         {
@@ -54,6 +56,7 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
             Answers = Builders.Answers.BuildAnswersDto(answers),
             BestAnswer = bestAnswerDto,
             CreatedAt = question.CreatedAt.ToLocalTime(),
+            AvailableToEdit = _userService.UserId == question.AuthorId
         };
 
         return dto;

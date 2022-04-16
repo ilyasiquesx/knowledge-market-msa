@@ -1,0 +1,76 @@
+﻿using Forum.Core.Services;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace Forum.Core.Entities.Questions.Queries.GetPaginated;
+
+public class GetQuestionsQuery : IRequest<IEnumerable<QuestionDtoTiny>>
+{
+    public Pagination Pagination { get; }
+
+    public GetQuestionsQuery(Pagination pagination)
+    {
+        Pagination = pagination;
+    }
+}
+
+public class Pagination
+{
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int MaxPageSize { get; set; } = int.MaxValue;
+    public int TotalCount { get; set; }
+}
+
+public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, IEnumerable<QuestionDtoTiny>>
+{
+    private readonly IDomainContext _domainContext;
+
+    public GetQuestionsQueryHandler(IDomainContext domainContext)
+    {
+        _domainContext = domainContext;
+    }
+
+    public async Task<IEnumerable<QuestionDtoTiny>> Handle(GetQuestionsQuery request,
+        CancellationToken cancellationToken)
+    {
+        if (request?.Pagination == null)
+            return Enumerable.Empty<QuestionDtoTiny>();
+
+        var totalQuestions = _domainContext.Questions.Count();
+        request.Pagination.TotalCount = totalQuestions;
+        ModifyRequest(request);
+
+        var pagination = request.Pagination;
+
+        var questions = await _domainContext.Questions
+            .Include(q => q.BestAnswer)
+            .Include(q => q.Answers)
+            .ThenInclude(a => a.Author)
+            .Include(q => q.Author)
+            .Skip(pagination.PageSize * (pagination.Page - 1))
+            .Take(pagination.PageSize).ToListAsync(cancellationToken);
+
+        var questionsDto = questions.Select(Builders.Questions.BuildQuestionDto);
+        return questionsDto;
+    }
+
+    private static void ModifyRequest(GetQuestionsQuery request)
+    {
+        if (request?.Pagination == null)
+            return;
+
+        if (request.Pagination.Page < 1)
+            request.Pagination.Page = 1;
+
+        if (request.Pagination.PageSize > request.Pagination.MaxPageSize)
+            request.Pagination.PageSize = request.Pagination.MaxPageSize;
+
+        if (request.Pagination.PageSize < 1)
+            request.Pagination.PageSize = 15;
+
+        var maxPages = (request.Pagination.TotalCount + request.Pagination.PageSize - 1) / request.Pagination.PageSize;
+        if (request.Pagination.Page > maxPages)
+            request.Pagination.Page = maxPages;
+    }
+}
