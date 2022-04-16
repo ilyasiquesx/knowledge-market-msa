@@ -8,6 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import {FC, useEffect, useState} from "react";
 import {useNavigate, Link} from "react-router-dom";
 import {clearUser, getUser, isAuthenticated, User} from "./UserService";
+import {Badge} from "@mui/material";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const NavbarComponent: FC<{}> = () => {
     const navigate = useNavigate();
@@ -48,12 +50,17 @@ const NavbarComponent: FC<{}> = () => {
                             display: 'flex',
                             alignItems: 'center'
                         }}>
-                            <Typography>{getUser()?.username ?? "Username"}</Typography>
-                            <Button color="inherit" onClick={onLogout}>Logout</Button>
+                            <Typography sx={{marginX: '5px'}}>{getUser()?.username ?? "Username"}</Typography>
+                            <Button color="inherit">
+                                <Badge color="error" variant="dot" sx={{marginX: '5px'}}>
+                                    <NotificationsIcon />
+                                </Badge>
+                            </Button>
+                            <Button color="inherit" onClick={onLogout} sx={{marginX: '5px'}}>Logout</Button>
                         </Box>
                         :
                         <Box>
-                            <Button color="inherit" onClick={onLoginClickHandler}>Login</Button>
+                            <Button color="inherit" onClick={onLoginClickHandler} sx={{marginX: '5px'}}>Login</Button>
                         </Box>
                     }
                 </Toolbar>
