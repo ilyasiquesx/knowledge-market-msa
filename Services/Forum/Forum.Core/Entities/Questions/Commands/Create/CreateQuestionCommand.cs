@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Core.Entities.Questions.Commands;
+namespace Forum.Core.Entities.Questions.Commands.Create;
 
 public class CreateQuestionCommand : IRequest
 {
@@ -27,9 +27,6 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionComman
 
     public async Task<Unit> Handle(CreateQuestionCommand request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(request.Title) || string.IsNullOrEmpty(request.Content))
-            throw new Exception("Title and content must exist");
-
         var userId = _userService.UserId;
         var user = await _context.Users
             .Include(u => u.Questions)

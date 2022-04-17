@@ -1,4 +1,5 @@
 using System.Text;
+using Logging;
 using Mailing.API.BackgroundTasks;
 using Mailing.API.Data;
 using Mailing.API.MessageBuilding;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RabbitMqEventBus.DependencyInjection;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +62,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddSerilog(builder.Configuration, builder.Environment);
+builder.WebHost.UseSerilog();
+
 var app = builder.Build();
 await MigrateDb(app);
 if (app.Environment.IsDevelopment())
@@ -68,7 +73,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

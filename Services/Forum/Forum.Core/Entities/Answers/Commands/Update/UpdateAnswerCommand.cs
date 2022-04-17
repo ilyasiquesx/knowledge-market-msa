@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Core.Entities.Answers.Commands;
+namespace Forum.Core.Entities.Answers.Commands.Update;
 
 public class UpdateAnswerCommand : IRequest
 {

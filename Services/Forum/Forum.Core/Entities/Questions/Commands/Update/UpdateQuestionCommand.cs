@@ -1,11 +1,13 @@
-﻿using Forum.Core.Services;
+﻿using System.Text.Json.Serialization;
+using Forum.Core.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Core.Entities.Questions.Commands;
+namespace Forum.Core.Entities.Questions.Commands.Update;
 
 public class UpdateQuestionCommand : IRequest
 {
+    [JsonIgnore]
     public long Id { get; set; }
     public string Title { get; set; }
     public string Content { get; set; }

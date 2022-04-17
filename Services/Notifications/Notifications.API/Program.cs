@@ -1,3 +1,4 @@
+using Logging;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Notifications.API.MediatrNotifications.Questions;
 using Notifications.API.MediatrNotifications.Users;
 using Notifications.API.Options;
 using RabbitMqEventBus.DependencyInjection;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +54,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = options.GetSecurityKey()
         };
     });
+builder.Services.AddSerilog(builder.Configuration, builder.Environment);
+
+builder.WebHost.UseSerilog();
 
 var app = builder.Build();
 await MigrateDb(app);
@@ -61,7 +66,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

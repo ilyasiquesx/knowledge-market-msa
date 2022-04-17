@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Core.Entities.Questions.Commands;
+namespace Forum.Core.Entities.Questions.Commands.Delete;
 
 public class DeleteQuestionCommand : IRequest
 {

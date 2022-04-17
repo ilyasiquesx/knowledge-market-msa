@@ -1,5 +1,7 @@
+using Logging;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,9 @@ builder.Configuration.AddJsonFile(builder.Configuration.GetValue<bool>("IsInDock
     : "ocelot.json");
 
 builder.Services.AddOcelot();
+
+builder.Services.AddSerilog(builder.Configuration, builder.Environment);
+builder.WebHost.UseSerilog();
 
 var app = builder.Build();
 

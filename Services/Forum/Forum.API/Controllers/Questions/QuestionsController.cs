@@ -1,5 +1,6 @@
-﻿using Forum.Core.Entities.Questions.Commands;
-using Forum.Core.Entities.Questions.Queries;
+﻿using Forum.Core.Entities.Questions.Commands.Create;
+using Forum.Core.Entities.Questions.Commands.Delete;
+using Forum.Core.Entities.Questions.Commands.Update;
 using Forum.Core.Entities.Questions.Queries.Get;
 using Forum.Core.Entities.Questions.Queries.GetPaginated;
 using MediatR;

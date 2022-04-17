@@ -6,7 +6,7 @@ namespace Forum.Infrastructure.Services;
 
 public class UserService : IUserService
 {
-    public string? UserId { get; }
+    public string UserId { get; }
 
     public UserService(IHttpContextAccessor httpContextAccessor)
     {

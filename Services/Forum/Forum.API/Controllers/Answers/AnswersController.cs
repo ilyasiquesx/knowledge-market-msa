@@ -1,4 +1,6 @@
-﻿using Forum.Core.Entities.Answers.Commands;
+﻿using Forum.Core.Entities.Answers.Commands.Create;
+using Forum.Core.Entities.Answers.Commands.Delete;
+using Forum.Core.Entities.Answers.Commands.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

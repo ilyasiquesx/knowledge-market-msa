@@ -39,7 +39,7 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, IEnum
 
         var totalQuestions = _domainContext.Questions.Count();
         request.Pagination.TotalCount = totalQuestions;
-        ModifyRequest(request);
+        ModifyRequest(request.Pagination);
 
         var pagination = request.Pagination;
 
@@ -55,22 +55,22 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, IEnum
         return questionsDto;
     }
 
-    private static void ModifyRequest(GetQuestionsQuery request)
+    private static void ModifyRequest(Pagination pagination)
     {
-        if (request?.Pagination == null)
+        if (pagination == null)
             return;
 
-        if (request.Pagination.Page < 1)
-            request.Pagination.Page = 1;
+        if (pagination.Page < 1)
+            pagination.Page = 1;
 
-        if (request.Pagination.PageSize > request.Pagination.MaxPageSize)
-            request.Pagination.PageSize = request.Pagination.MaxPageSize;
+        if (pagination.PageSize > pagination.MaxPageSize)
+            pagination.PageSize = pagination.MaxPageSize;
 
-        if (request.Pagination.PageSize < 1)
-            request.Pagination.PageSize = 15;
+        if (pagination.PageSize < 1)
+            pagination.PageSize = 15;
 
-        var maxPages = (request.Pagination.TotalCount + request.Pagination.PageSize - 1) / request.Pagination.PageSize;
-        if (request.Pagination.Page > maxPages)
-            request.Pagination.Page = maxPages;
+        var maxPages = (pagination.TotalCount + pagination.PageSize - 1) / pagination.PageSize;
+        if (pagination.Page > maxPages)
+            pagination.Page = maxPages;
     }
 }

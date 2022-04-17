@@ -1,14 +1,18 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Forum.API.BackgroundTasks;
 using Forum.API.Options;
 using Forum.Core.Entities.Users.Notifications;
 using Forum.Core.Services;
 using Forum.Infrastructure.Data;
 using Forum.Infrastructure.Services;
+using Logging;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RabbitMqEventBus.DependencyInjection;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +50,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IDateService, DateService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHostedService<MessageHandlerHostedService>();
+builder.Services.AddFluentValidation();
+builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSerilog(builder.Configuration, builder.Environment);
+
+builder.WebHost.UseSerilog();
 
 var app = builder.Build();
 await MigrateDb(app);
@@ -58,7 +67,10 @@ app.Use(async (context, next) =>
     }
     catch (Exception e)
     {
-        logger.LogWarning(e, "Global exception handling");
+        if (context.Response.HasStarted)
+            return;
+        
+        logger.LogError(e, "Global exception handling");
         context.Response.StatusCode = 500;
         await context.Response.WriteAsJsonAsync(new
         {
@@ -73,7 +85,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
