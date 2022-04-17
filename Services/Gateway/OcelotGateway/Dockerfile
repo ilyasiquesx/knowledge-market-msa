@@ -8,6 +8,7 @@ RUN dotnet restore "OcelotGateway.csproj"
 
 # copy everything else and build app
 COPY ["Services/Gateway", "./aspnetapp/Services/Gateway"]
+COPY ["Common/Logging", "./aspnetapp/Common/Logging"]
 WORKDIR /source/aspnetapp/Services/Gateway/OcelotGateway
 RUN ls -a
 RUN dotnet publish "OcelotGateway.csproj" -c release -o /app --no-restore /restore
