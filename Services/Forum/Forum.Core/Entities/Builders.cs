@@ -11,18 +11,18 @@ public static class Builders
 {
     public static class Answers
     {
-        public static IEnumerable<AnswerDto> BuildAnswersDto(IEnumerable<Answer> answers)
+        public static IEnumerable<AnswerDto> BuildAnswersDto(IEnumerable<Answer> answers, string requestedBy)
         {
             if (answers == null)
                 yield break;
 
             foreach (var answer in answers)
             {
-                yield return BuildAnswerDto(answer);
+                yield return BuildAnswerDto(answer, requestedBy);
             }
         }
 
-        public static AnswerDto BuildAnswerDto(Answer answer)
+        public static AnswerDto BuildAnswerDto(Answer answer, string requestedBy)
         {
             var doesAuthorPresent = !string.IsNullOrEmpty(answer.AuthorId) && answer.Author != null;
             ThrowIf.False(doesAuthorPresent, "Answer can't has no author");
@@ -32,7 +32,8 @@ public static class Builders
                 Id = answer.Id,
                 Author = Users.BuildAuthorDto(answer.Author),
                 Content = answer.Content,
-                CreatedAt = answer.CreatedAt.ToLocalTime(),
+                CreatedAt = answer.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
+                AvailableToEdit = requestedBy == answer.AuthorId
             };
         }
     }
@@ -58,7 +59,7 @@ public static class Builders
                 Id = question.Id,
                 Title = question.Title,
                 Author = Users.BuildAuthorDto(question.Author),
-                CreatedAt = question.CreatedAt.ToLocalTime(),
+                CreatedAt = question.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
             };
         }
     }

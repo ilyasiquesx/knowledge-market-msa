@@ -38,14 +38,16 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
         ThrowIf.Null(question!.Author, "Question author can't be null");
 
         var author = question!.Author;
-        var answers = question.Answers;
+        var answers = question.Answers.OrderByDescending(a => a.CreatedAt).ToList();
         var bestAnswer = question.BestAnswer;
 
         AnswerDto bestAnswerDto = null;
+        var requestedBy = _userService.UserId;
+        
         if (bestAnswer != null)
         {
             answers = answers.Where(a => a.Id != bestAnswer.Id).ToList();
-            bestAnswerDto = Builders.Answers.BuildAnswerDto(bestAnswer);
+            bestAnswerDto = Builders.Answers.BuildAnswerDto(bestAnswer, requestedBy);
         }
 
         var dto = new QuestionDto
@@ -53,10 +55,10 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
             Title = question.Title,
             Content = question.Content,
             Author = Builders.Users.BuildAuthorDto(author),
-            Answers = Builders.Answers.BuildAnswersDto(answers),
+            Answers = Builders.Answers.BuildAnswersDto(answers, requestedBy),
             BestAnswer = bestAnswerDto,
-            CreatedAt = question.CreatedAt.ToLocalTime(),
-            AvailableToEdit = _userService.UserId == question.AuthorId
+            CreatedAt = question.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
+            AvailableToEdit = requestedBy == question.AuthorId
         };
 
         return dto;

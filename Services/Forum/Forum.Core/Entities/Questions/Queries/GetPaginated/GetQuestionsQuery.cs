@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Core.Entities.Questions.Queries.GetPaginated;
 
-public class GetQuestionsQuery : IRequest<IEnumerable<QuestionDtoTiny>>
+public class GetQuestionsQuery : IRequest<QuestionsDto>
 {
     public Pagination Pagination { get; }
 
@@ -22,7 +22,7 @@ public class Pagination
     public int TotalCount { get; set; }
 }
 
-public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, IEnumerable<QuestionDtoTiny>>
+public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, QuestionsDto>
 {
     private readonly IDomainContext _domainContext;
 
@@ -31,15 +31,15 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, IEnum
         _domainContext = domainContext;
     }
 
-    public async Task<IEnumerable<QuestionDtoTiny>> Handle(GetQuestionsQuery request,
+    public async Task<QuestionsDto> Handle(GetQuestionsQuery request,
         CancellationToken cancellationToken)
     {
         if (request?.Pagination == null)
-            return Enumerable.Empty<QuestionDtoTiny>();
+            return null;
 
         var totalQuestions = _domainContext.Questions.Count();
         request.Pagination.TotalCount = totalQuestions;
-        ModifyRequest(request.Pagination);
+        var totalPages = ModifyRequestAndGetTotalPages(request.Pagination);
 
         var pagination = request.Pagination;
 
@@ -52,13 +52,17 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, IEnum
             .Take(pagination.PageSize).ToListAsync(cancellationToken);
 
         var questionsDto = questions.Select(Builders.Questions.BuildQuestionDto);
-        return questionsDto;
+        return new QuestionsDto
+        {
+            Questions = questionsDto,
+            PageCount = totalPages
+        };
     }
 
-    private static void ModifyRequest(Pagination pagination)
+    private static int ModifyRequestAndGetTotalPages(Pagination pagination)
     {
         if (pagination == null)
-            return;
+            return 0;
 
         if (pagination.Page < 1)
             pagination.Page = 1;
@@ -72,5 +76,7 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, IEnum
         var maxPages = (pagination.TotalCount + pagination.PageSize - 1) / pagination.PageSize;
         if (pagination.Page > maxPages)
             pagination.Page = maxPages;
+
+        return maxPages;
     }
 }

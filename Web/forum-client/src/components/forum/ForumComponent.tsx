@@ -1,62 +1,111 @@
 import {FC, useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {Link, List, ListItem, ListItemButton, ListItemText, Pagination, PaginationItem} from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {DataGrid} from "@mui/x-data-grid";
+import {Grid, List, ListItem, Pagination} from "@mui/material";
 import {Link as RouterLink} from "react-router-dom"
-import {Router} from "@mui/icons-material";
 import {getQuestions} from "../ApiService";
 import Button from "@mui/material/Button";
 
 interface Question {
     title: string,
-    createdBy: string,
+    author: User,
     id: number,
+    createdAt: string
 }
 
+interface User {
+    username: string,
+    id: string
+}
 
 interface Pagination {
     pageSize: number,
+    page: number
 }
+
 
 const ForumComponent: FC<{}> = () => {
 
     const [questions, setQuestions] = useState<Question[]>([]);
+    const [pagesCount, setPagesCount] = useState<number>(0);
+    const [paginationRequest, setPaginationRequest] = useState<Pagination>({
+        pageSize: 2,
+        page: 1
+    })
+
     useEffect(() => {
-        getQuestions().then(r => {
-            console.log(r.data);
-            setQuestions(r.data);
-        })
+        questionsUpdate(paginationRequest)
     }, [])
+
+    function questionsUpdate(pagination: any) {
+        getQuestions({
+            page: pagination.page,
+            pageSize: pagination.pageSize
+        }).then(r => {
+            console.log(r.data);
+            setQuestions(r.data?.questions);
+            setPagesCount(r.data?.pageCount);
+        })
+    }
 
     function BuildTopic(question: Question) {
         return (
-            <ListItem disablePadding key={question?.id}>
-                <RouterLink to={`question/${question?.id}`}>{question?.title}</RouterLink>
-            </ListItem>)
+            <ListItem disablePadding key={question?.id} sx={{
+                padding: '10px',
+                display: 'flex',
+                gap: '10px',
+                border: '1px solid #8472fc',
+                borderRadius: '10px',
+                minWidth: '450px'
+            }}>
+
+                <RouterLink to={`question/${question?.id}`}
+                            style={{
+                                flexGrow: '1',
+                                textDecoration: 'none'
+                            }}>
+                    {question?.title}
+                </RouterLink>
+                <Box>
+                    <Typography>Created by: {question?.author.username}</Typography>
+                    <Typography>Created at: {question?.createdAt}</Typography>
+                </Box>
+
+            </ListItem>
+        )
     }
 
     return (
         <Box>
             <Box sx={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'column'
             }}>
-                <Typography textAlign="center" sx={{margin: '5px'}}>Questions list</Typography>
+                <Typography textAlign="center" sx={{
+                    margin: '5px',
+                    padding: '10px'
+                }}>Questions list</Typography>
                 <Button variant="contained" sx={{margin: '5px'}}>Ask a question</Button>
             </Box>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'center'
-            }}>
-                <List>
+                <List sx={{
+                    display: 'flex',
+                    gap: '10px',
+                    flexDirection: 'column',
+                    alignItems: 'space-between'
+                }}>
                     {questions?.map(BuildTopic)}
                 </List>
-            </Box>
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}>
+                    <Pagination count={pagesCount} onChange={(e, v) => questionsUpdate({
+                        page: v,
+                        pageSize: paginationRequest.pageSize
+                    })} variant="outlined" color="primary"/>
+                </Box>
         </Box>)
 }
 
