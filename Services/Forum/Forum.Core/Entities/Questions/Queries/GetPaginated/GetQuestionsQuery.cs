@@ -48,6 +48,7 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, Quest
             .Include(q => q.Answers)
             .ThenInclude(a => a.Author)
             .Include(q => q.Author)
+            .OrderByDescending(q => q.CreatedAt)
             .Skip(pagination.PageSize * (pagination.Page - 1))
             .Take(pagination.PageSize).ToListAsync(cancellationToken);
 

@@ -52,6 +52,7 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
 
         var dto = new QuestionDto
         {
+            Id = question.Id,
             Title = question.Title,
             Content = question.Content,
             Author = Builders.Users.BuildAuthorDto(author),

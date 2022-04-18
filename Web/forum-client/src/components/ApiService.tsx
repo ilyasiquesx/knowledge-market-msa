@@ -17,12 +17,23 @@ export function loginApi(body: any) {
     return instance.post("http://localhost:4900/auth/Login", body)
 }
 
-export function getQuestions(request : any)
-{
-    return instance.get("http://localhost:4900/forum/questions/", {params: {pageSize: request.pageSize, page: request.page}})
+export function getQuestions(request: any) {
+    return instance.get("http://localhost:4900/forum/questions/", {
+        params: {
+            pageSize: request.pageSize,
+            page: request.page
+        }
+    })
 }
 
-export function getQuestionById(id : string)
-{
+export function getQuestionById(id: string) {
     return instance.get(`http://localhost:4900/forum/questions/${id}`);
+}
+
+export function postAnswer(body: any) {
+    return instance.post("http://localhost:4900/forum/Answers", body)
+}
+
+export function postQuestion(body: any) {
+    return instance.post("http://localhost:4900/forum/Questions", body)
 }

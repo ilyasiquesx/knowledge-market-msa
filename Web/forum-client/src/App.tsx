@@ -7,6 +7,7 @@ import NavbarComponent from "./components/NavbarComponent";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import QuestionComponent from "./components/forum/QuestionComponent";
 import {Grid} from "@mui/material";
+import CreateQuestionComponent from "./components/forum/CreateQuestionComponent";
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
                         <Route path="/" element={<ForumComponent/>}/>
                         <Route path="/auth" element={<AccountComponent/>}/>
                         <Route path="/question/:id" element={<QuestionComponent/>}/>
+                        <Route path="/question/create" element={<CreateQuestionComponent/>}/>
                     </Routes>
                     </Grid>
                 </Router>

@@ -50,7 +50,7 @@ const NavbarComponent: FC<{}> = () => {
                             display: 'flex',
                             alignItems: 'center'
                         }}>
-                            <Typography sx={{marginX: '5px'}}>{getUser()?.username ?? "Username"}</Typography>
+                            <Typography sx={{marginX: '5px'}}>Welcome, {getUser()?.username ?? "guest"}</Typography>
                             <Button color="inherit">
                                 <Badge color="error" variant="dot" sx={{marginX: '5px'}}>
                                     <NotificationsIcon />

@@ -2,9 +2,11 @@ import {FC, useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Grid, List, ListItem, Pagination} from "@mui/material";
-import {Link as RouterLink} from "react-router-dom"
+import {Link as RouterLink, useNavigate} from "react-router-dom"
 import {getQuestions} from "../ApiService";
 import Button from "@mui/material/Button";
+import ProgressComponent from "../ProgressComponent";
+import {trackPromise} from "react-promise-tracker";
 
 interface Question {
     title: string,
@@ -29,20 +31,22 @@ const ForumComponent: FC<{}> = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [pagesCount, setPagesCount] = useState<number>(0);
     const [paginationRequest, setPaginationRequest] = useState<Pagination>({
-        pageSize: 2,
+        pageSize: 6,
         page: 1
     })
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         questionsUpdate(paginationRequest)
     }, [])
 
     function questionsUpdate(pagination: any) {
-        getQuestions({
+        trackPromise(getQuestions({
             page: pagination.page,
             pageSize: pagination.pageSize
-        }).then(r => {
-            console.log(r.data);
+        }), 'fetch-service').then(r => {
+            console.log(r?.data);
             setQuestions(r.data?.questions);
             setPagesCount(r.data?.pageCount);
         })
@@ -80,32 +84,36 @@ const ForumComponent: FC<{}> = () => {
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                marginBottom: '10px'
             }}>
                 <Typography textAlign="center" sx={{
                     margin: '5px',
                     padding: '10px'
                 }}>Questions list</Typography>
-                <Button variant="contained" sx={{margin: '5px'}}>Ask a question</Button>
+                <Button variant="contained" sx={{margin: '5px'}} onClick={() => {
+                    navigate("/question/create");
+                }}>Ask a question</Button>
             </Box>
-                <List sx={{
-                    display: 'flex',
-                    gap: '10px',
-                    flexDirection: 'column',
-                    alignItems: 'space-between'
-                }}>
-                    {questions?.map(BuildTopic)}
-                </List>
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                }}>
-                    <Pagination count={pagesCount} onChange={(e, v) => questionsUpdate({
-                        page: v,
-                        pageSize: paginationRequest.pageSize
-                    })} variant="outlined" color="primary"/>
-                </Box>
+            <ProgressComponent/>
+            <List sx={{
+                display: 'flex',
+                gap: '10px',
+                flexDirection: 'column',
+                alignItems: 'space-between'
+            }}>
+                {questions?.map(BuildTopic)}
+            </List>
+
+            {questions.length > 0 && <Box sx={{
+                display: 'flex',
+                justifyContent: 'center'
+            }}>
+                <Pagination count={pagesCount} onChange={(e, v) => questionsUpdate({
+                    page: v,
+                    pageSize: paginationRequest.pageSize
+                })} variant="outlined" color="primary"/>
+            </Box>}
         </Box>)
 }
 

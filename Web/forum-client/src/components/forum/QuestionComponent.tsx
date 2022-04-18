@@ -2,11 +2,15 @@ import {FC, useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import {useParams} from "react-router-dom"
 import Typography from "@mui/material/Typography";
-import {Pagination, TextField} from "@mui/material";
-import {getQuestionById} from "../ApiService";
+import {Pagination, TextareaAutosize, TextField} from "@mui/material";
+import {getQuestionById, postAnswer} from "../ApiService";
 import Button from "@mui/material/Button";
+import {isAuthenticated} from "../UserService";
+import ProgressComponent from "../ProgressComponent";
+import {trackPromise} from "react-promise-tracker";
 
 interface Question {
+    id: number,
     title: string,
     content: string,
     author: User,
@@ -33,18 +37,30 @@ const QuestionComponent: FC<{}> = () => {
     const {id} = useParams();
     const [question, setQuestion] = useState<Question>();
     const [answers, setAnswers] = useState<Answer[]>([]);
+    const [replyField, setReplyField] = useState<string>('');
+    const answersPerPage = 3;
 
     useEffect(() => {
-        getQuestionById(id as string)
-            .then(r => {
-                setQuestion(r?.data)
-                setAnswers(r?.data.answers.slice(0, 3) as Answer[])
-            });
+        getQuestion(id as string)
     }, [])
 
-    console.log(question);
-    console.log(answers);
-    console.log(question?.answers.slice(0, 3) as Answer[])
+    function getQuestion(id: string) {
+        trackPromise(getQuestionById(id), 'fetch-service')
+            .then(r => {
+                setQuestion(r?.data)
+                setAnswers(r?.data.answers.slice(0, answersPerPage) as Answer[])
+            });
+    }
+
+    function onReplyClickHandler() {
+        postAnswer({
+            content: replyField,
+            questionId: question?.id
+        }).then(r => {
+            getQuestion(question?.id.toString() as string);
+            setReplyField('');
+        })
+    }
 
     function renderAnswer(answer: Answer, color: string) {
         return (
@@ -64,6 +80,7 @@ const QuestionComponent: FC<{}> = () => {
         )
     }
 
+    console.log(question);
     return (
         <Box sx={{
             display: 'flex',
@@ -73,6 +90,8 @@ const QuestionComponent: FC<{}> = () => {
             gap: '10px',
             maxWidth: '500px'
         }}>
+            <ProgressComponent/>
+            {question &&
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -81,46 +100,57 @@ const QuestionComponent: FC<{}> = () => {
                 gap: '5px',
                 marginBottom: '20px'
             }}>
-                <Typography noWrap fontSize="2em" align="center" sx={{
-                    borderRadius: '5px'
-                }}>{question?.title}</Typography>
-                <Typography fontSize="1.2em" align="center" sx={{
-                    minWidth: '500px',
-                    borderRadius: '5px'
-                }}>{question?.content}</Typography>
-                <Typography fontSize="0.8em" align="right">Asked by: {question?.author?.username}</Typography>
-                <Typography fontSize="0.8em" align="right">Created at: {question?.createdAt}</Typography>
-            </Box>
-            {question?.bestAnswer && <Typography align="center">Best answer</Typography>}
-            {question?.bestAnswer && renderAnswer(question?.bestAnswer, '#ccffe0')}
-            {answers?.length > 0
-                ? <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center'
-                }}> <Typography align="center">Other answers</Typography>
-                    <Pagination count={Math.ceil(question?.answers.length as number / 3)} onChange={(e, v) => {
-                        setAnswers(question?.answers?.slice((v - 1) * 3, 3 * v) as Answer[])
-                    }} variant="outlined" color="primary"/>
+                <Box>
+                    <Typography fontSize="2em" align="center" sx={{
+                        borderRadius: '5px'
+                    }}>{question?.title}</Typography>
+                    <Typography fontSize="1.2em" align="center" sx={{
+                        minWidth: '500px',
+                        borderRadius: '5px'
+                    }}>{question?.content}</Typography>
+                    <Typography fontSize="0.8em" align="right">Asked by: {question?.author?.username}</Typography>
+                    <Typography fontSize="0.8em" align="right">Created at: {question?.createdAt}</Typography>
                 </Box>
-                : <Typography align="center">There are no answers yet</Typography>
-            }
-            {answers?.map(a => renderAnswer(a, 'white'))}
-            <Box sx={{
-                display: 'flex',
-            }}>
-                <TextField sx={{
-                    flexGrow: 1
-                }}
-                           id="full-width-text-field"
-                           label="Type your answer"
-                           placeholder="Type your answer"
-                           helperText="Be polite..."
-                />
-            </Box>
-            <Box margin="auto">
-                <Button size="small" variant="contained">Reply</Button>
-            </Box>
+                {question?.bestAnswer &&
+                <Box>
+                    <Typography align="center">Best answer</Typography>
+                    {renderAnswer(question?.bestAnswer, '#ccffe0')}
+                </Box>}
+                {answers?.length > 0
+                    ? <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}> <Typography align="center">Other answers</Typography>
+                        <Pagination count={Math.ceil(question?.answers.length as number / answersPerPage)}
+                                    onChange={(e, v) => {
+                                        setAnswers(question?.answers?.slice((v - 1) * answersPerPage, answersPerPage * v) as Answer[])
+                                    }} variant="outlined" color="primary"/>
+                    </Box>
+                    : <Typography align="center">There are no answers yet</Typography>
+                }
+                {answers?.map(a => renderAnswer(a, 'white'))}
+                {isAuthenticated() &&
+                <Box>
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
+                        <Typography align="center">Your reply text</Typography>
+                        <TextareaAutosize
+                            value={replyField}
+                            onChange={(e) => setReplyField(e.target.value)}
+                            style={{
+                                marginBottom: '10px',
+                                width: '100%',
+                                minHeight: '100px'
+                            }}/>
+                    </Box>
+                    <Box margin="auto">
+                        <Button size="small" variant="contained" onClick={onReplyClickHandler}>Reply</Button>
+                    </Box>
+                </Box>}
+            </Box>}
         </Box>)
 }
 
