@@ -11,7 +11,7 @@ const AccountComponent: FC<{ /*onUserChange: (user: User) => void*/ }> = (/*{onU
     const navigate = useNavigate();
     useEffect(() => {
         if (isAuthenticated()) {
-            navigate('/')
+            window.location.assign("/");
         }
     }, [])
 

@@ -75,7 +75,7 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, Quest
             pagination.PageSize = 15;
 
         var maxPages = (pagination.TotalCount + pagination.PageSize - 1) / pagination.PageSize;
-        if (pagination.Page > maxPages)
+        if (pagination.Page > maxPages && maxPages > 0)
             pagination.Page = maxPages;
 
         return maxPages;

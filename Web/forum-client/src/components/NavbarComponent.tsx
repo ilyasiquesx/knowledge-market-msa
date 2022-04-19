@@ -4,15 +4,36 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import {FC, useEffect, useState} from "react";
 import {useNavigate, Link} from "react-router-dom";
 import {clearUser, getUser, isAuthenticated, User} from "./UserService";
 import {Badge} from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import {trackPromise} from "react-promise-tracker";
+import {getNotifications} from "./ApiService";
+
+
+interface Notification {
+    isRead: boolean,
+    content: Content
+}
+
+interface Content {
+    message: string,
+    link: string
+}
+
 
 const NavbarComponent: FC<{}> = () => {
     const navigate = useNavigate();
+    const [notifications, setNotification] = useState<Notification[]>([]);
+
+    useEffect(() => {
+        if (isAuthenticated()){
+            trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r.data))
+        }
+    }, [])
+
     function onLoginClickHandler() {
         if (isAuthenticated()) {
             navigate('/')
@@ -25,21 +46,13 @@ const NavbarComponent: FC<{}> = () => {
         clearUser();
         navigate('/');
     }
-    console.log("Navbar render");
+
     return (
         <Box sx={{flexGrow: 1}}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{mr: 2}}>
-                    </IconButton>
-
                     <Box sx={{flexGrow: 1}}>
-                        <Button color="inherit" onClick={() => navigate('/')}>
+                        <Button color="inherit" onClick={() => window.location.assign("/")}>
                             Knowledge market
                         </Button>
                     </Box>
@@ -52,9 +65,15 @@ const NavbarComponent: FC<{}> = () => {
                         }}>
                             <Typography sx={{marginX: '5px'}}>Welcome, {getUser()?.username ?? "guest"}</Typography>
                             <Button color="inherit">
-                                <Badge color="error" variant="dot" sx={{marginX: '5px'}}>
-                                    <NotificationsIcon />
-                                </Badge>
+                                {
+                                    notifications?.some(n => !n.isRead)
+                                        ? <Badge color="error" variant="dot" sx={{marginX: '5px'}}>
+                                            <NotificationsIcon/>
+                                        </Badge>
+                                        : <Badge color="error" sx={{marginX: '5px'}}>
+                                            <NotificationsIcon/>
+                                        </Badge>
+                                }
                             </Button>
                             <Button color="inherit" onClick={onLogout} sx={{marginX: '5px'}}>Logout</Button>
                         </Box>

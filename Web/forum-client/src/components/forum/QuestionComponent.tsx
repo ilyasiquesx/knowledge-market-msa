@@ -71,7 +71,8 @@ const QuestionComponent: FC<{}> = () => {
                 gap: '5px',
                 backgroundColor: color,
                 padding: '5px',
-                borderRadius: '5px'
+                borderRadius: '5px',
+                border: '2px solid #a9c9fc',
             }}>
                 <Typography>{answer?.content}</Typography>
                 <Typography fontSize="0.8em" align="right">Created by: {answer?.author?.username}</Typography>
@@ -98,17 +99,22 @@ const QuestionComponent: FC<{}> = () => {
                 padding: '10px',
                 flexDirection: 'column',
                 gap: '5px',
-                marginBottom: '20px'
             }}>
-                <Box>
+                <Box sx={{
+                    border: '2px solid #a9c9fc',
+                    backgroundColor: '#e6eefc',
+                    borderRadius: '5px',
+                    padding: '5px',
+                }}>
                     <Typography fontSize="2em" align="center" sx={{
                         borderRadius: '5px'
                     }}>{question?.title}</Typography>
                     <Typography fontSize="1.2em" align="center" sx={{
-                        minWidth: '500px',
+                        minWidth: '320px',
                         borderRadius: '5px'
                     }}>{question?.content}</Typography>
-                    <Typography fontSize="0.8em" align="right">Asked by: {question?.author?.username}</Typography>
+                    <Typography fontSize="0.8em" align="right" marginTop="10px">Asked
+                        by: {question?.author?.username}</Typography>
                     <Typography fontSize="0.8em" align="right">Created at: {question?.createdAt}</Typography>
                 </Box>
                 {question?.bestAnswer &&
@@ -127,25 +133,26 @@ const QuestionComponent: FC<{}> = () => {
                                         setAnswers(question?.answers?.slice((v - 1) * answersPerPage, answersPerPage * v) as Answer[])
                                     }} variant="outlined" color="primary"/>
                     </Box>
-                    : <Typography align="center">There are no answers yet</Typography>
+                    : <Typography align="center" variant="h4">There are no answers yet</Typography>
                 }
-                {answers?.map(a => renderAnswer(a, 'white'))}
+                {answers?.map(a => renderAnswer(a, '#cce4ff'))}
                 {isAuthenticated() &&
-                <Box>
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}>
-                        <Typography align="center">Your reply text</Typography>
-                        <TextareaAutosize
-                            value={replyField}
-                            onChange={(e) => setReplyField(e.target.value)}
-                            style={{
-                                marginBottom: '10px',
-                                width: '100%',
-                                minHeight: '100px'
-                            }}/>
-                    </Box>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <Typography align="center">Your reply text</Typography>
+                    <TextareaAutosize
+                        value={replyField}
+                        onChange={(e) => setReplyField(e.target.value)}
+                        style={{
+                            marginBottom: '10px',
+                            width: '100%',
+                            minHeight: '100px',
+                            border: '2px solid #a9c9fc',
+                            backgroundColor: '#e6eefc',
+                            borderRadius: '5px',
+                        }}/>
                     <Box margin="auto">
                         <Button size="small" variant="contained" onClick={onReplyClickHandler}>Reply</Button>
                     </Box>

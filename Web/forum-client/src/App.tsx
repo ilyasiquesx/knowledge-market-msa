@@ -8,12 +8,13 @@ import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import QuestionComponent from "./components/forum/QuestionComponent";
 import {Grid} from "@mui/material";
 import CreateQuestionComponent from "./components/forum/CreateQuestionComponent";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
     const [user, setUser] = useState<User>(getUser());
 
-    console.log(user);
     return (
         <div className="App">
             <header className="App-header">
@@ -26,14 +27,15 @@ function App() {
                         alignItems="center"
                         justifyContent="center"
                     >
-                    <Routes>
-                        <Route path="/" element={<ForumComponent/>}/>
-                        <Route path="/auth" element={<AccountComponent/>}/>
-                        <Route path="/question/:id" element={<QuestionComponent/>}/>
-                        <Route path="/question/create" element={<CreateQuestionComponent/>}/>
-                    </Routes>
+                        <Routes>
+                            <Route path="/" element={<ForumComponent/>}/>
+                            <Route path="/auth" element={<AccountComponent/>}/>
+                            <Route path="/question/:id" element={<QuestionComponent/>}/>
+                            <Route path="/question/create" element={<CreateQuestionComponent/>}/>
+                        </Routes>
                     </Grid>
                 </Router>
+                <ToastContainer/>
             </header>
         </div>
     );

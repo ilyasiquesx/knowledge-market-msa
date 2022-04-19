@@ -60,6 +60,7 @@ public static class Builders
                 Title = question.Title,
                 Author = Users.BuildAuthorDto(question.Author),
                 CreatedAt = question.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
+                AnswersCount = question.Answers.Count
             };
         }
     }

@@ -31,8 +31,11 @@ public class NotificationsController : ControllerBase
             .ToListAsync();
 
         var dto = unreadNotificationsForUser
-            .Select(n => n.Content)
-            .Select(JsonConvert.DeserializeObject<NotificationDto>);
+            .Select(n => new
+            {
+                IsRead = n.IsRead,
+                Content = JsonConvert.DeserializeObject<NotificationDto>(n.Content)
+            });
 
         return Ok(dto);
     }

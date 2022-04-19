@@ -56,7 +56,7 @@ const CreateQuestionComponent: FC<{ /*onUserChange: (user: User) => void*/ }> = 
                     required
                     value={createRequest?.content}
                     onChange={(event) => onFieldChange("content", event.target.value)}/>
-                <Button variant="contained" onClick={onCreateQuestionHandler}>Sign up</Button>
+                <Button variant="contained" onClick={onCreateQuestionHandler}>Ask</Button>
             </FormControl>
         </Box>)
 }

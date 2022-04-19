@@ -34,9 +34,8 @@ const LoginComponent: FC<{}> = () => {
                         accessToken: r?.data?.accessToken
                     } as User;
                     setUser(user)
+                    window.location.assign("/");
                 }
-
-                navigate('/');
             });
     }
 
