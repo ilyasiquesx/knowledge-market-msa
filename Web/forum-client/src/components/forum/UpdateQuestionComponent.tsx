@@ -59,17 +59,17 @@ const UpdateQuestionComponent: FC<{}> = () => {
     return (
         <Box sx={{
             display: 'flex',
-            justifyContent: 'column',
+            justifyContent: 'center',
             margin: '10px'
         }}>
             <FormControl sx={{padding: '10px'}}>
-                <Typography align="center" variant="h4" mb="10px">Update existing question</Typography>
+                <Typography variant="h4" mb="10px">Update existing question</Typography>
                 <Typography>New title</Typography>
                 <TextareaAutosize
                     style={{
                         marginTop: '10px',
                         marginBottom: '10px',
-                        minHeight: '100px',
+                        minHeight: '50px',
                         width: '100%'
                     }}
                     required

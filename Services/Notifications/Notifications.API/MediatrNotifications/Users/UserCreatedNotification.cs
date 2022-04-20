@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Notifications.API.Data;
+using Notifications.API.Dto;
 
 namespace Notifications.API.MediatrNotifications.Users;
 
@@ -29,6 +30,13 @@ public class UserCreatedHandler : INotificationHandler<UserCreatedNotification>
         {
             Username = notification.Username,
             Id = notification.UserId
+        });
+        
+        _context.Notifications.Add(new Notification
+        {
+            Content = "Thank you to chose our service! We hope you will find answers to your questions!",
+            CreatedAt = DateTime.UtcNow,
+            UserId = notification.UserId
         });
 
         await _context.SaveChangesAsync(cancellationToken);

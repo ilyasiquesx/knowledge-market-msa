@@ -72,3 +72,8 @@ export function deleteQuestion(id: string) {
 export function getNotifications() {
     return instance.get("http://localhost:4900/notifications")
 }
+
+export function putNotifications()
+{
+    return instance.put("http://localhost:4900/notifications")
+}

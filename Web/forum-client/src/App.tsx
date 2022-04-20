@@ -12,6 +12,7 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import UpdateQuestionComponent from "./components/forum/UpdateQuestionComponent";
 import Box from "@mui/material/Box";
+import NotificationsComponent from "./components/notifications/NotificationsComponent";
 
 function App() {
 
@@ -34,7 +35,7 @@ function App() {
                         <Grid item xl={6} md={8} xs={12} sx={{
                             borderRight: '1px solid #7194a8',
                             borderLeft: '1px solid #7194a8',
-                            height: '100vh'
+                            minHeight: '100vh'
                         }}>
                             <Routes>
                                 <Route path="/" element={<ForumComponent/>}/>
@@ -42,6 +43,7 @@ function App() {
                                 <Route path="/question/:id" element={<QuestionComponent/>}/>
                                 <Route path="/question/create" element={<CreateQuestionComponent/>}/>
                                 <Route path="/question/edit/:id" element={<UpdateQuestionComponent/>}/>
+                                <Route path="/notifications" element={<NotificationsComponent/>}/>
                             </Routes>
                         </Grid>
                     </Grid>

@@ -75,7 +75,7 @@ const ForumComponent: FC<{}> = () => {
                                     }}>
                             {question?.title}
                         </RouterLink>
-                        <Box>
+                        <Box m="5px">
                             <Typography align="right">Created by: {question?.author.username}</Typography>
                             <Typography align="right">Created at: {question?.createdAt}</Typography>
                         </Box>

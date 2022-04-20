@@ -12,7 +12,6 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import {trackPromise} from "react-promise-tracker";
 import {getNotifications} from "./ApiService";
 
-
 interface Notification {
     isRead: boolean,
     content: Content
@@ -20,16 +19,16 @@ interface Notification {
 
 interface Content {
     message: string,
-    link: string
+    questionId: number,
+    questionTitle: string
 }
-
 
 const NavbarComponent: FC<{}> = () => {
     const navigate = useNavigate();
     const [notifications, setNotification] = useState<Notification[]>([]);
 
     useEffect(() => {
-        if (isAuthenticated()){
+        if (isAuthenticated()) {
             trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r.data))
         }
     }, [])
@@ -45,6 +44,10 @@ const NavbarComponent: FC<{}> = () => {
     function onLogout() {
         clearUser();
         navigate('/');
+    }
+
+    function toNotifications() {
+        navigate('/notifications');
     }
 
     return (
@@ -64,7 +67,7 @@ const NavbarComponent: FC<{}> = () => {
                             alignItems: 'center'
                         }}>
                             <Typography sx={{marginX: '5px'}}>Welcome, {getUser()?.username ?? "guest"}</Typography>
-                            <Button color="inherit">
+                            <Button color="inherit" onClick={toNotifications}>
                                 {
                                     notifications?.some(n => !n.isRead)
                                         ? <Badge color="error" variant="dot" sx={{marginX: '5px'}}>

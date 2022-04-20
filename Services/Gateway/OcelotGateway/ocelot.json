@@ -59,7 +59,8 @@
       ],
       "UpstreamPathTemplate": "/notifications/",
       "UpstreamHttpMethod": [
-        "Get"
+        "Get",
+        "Put"
       ]
     }
   ]

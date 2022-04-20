@@ -100,24 +100,36 @@ const QuestionComponent: FC<{}> = () => {
                             title: question?.title,
                             content: question?.content,
                             bestAnswerId: null,
-                        })} variant="contained" sx={{}}>Unmark best</Button>
+                        })} variant="contained" sx={{
+                            margin: '5px'
+                        }}>Unmark best</Button>
                         : <Button size="small" onClick={() => onUpdateQuestion({
                             title: question?.title,
                             content: question?.content,
                             bestAnswerId: answer?.id,
-                        })} variant="contained" sx={{}}>Mark as best</Button>}
+                        })} variant="contained" sx={{
+                            margin: '5px'
+                        }}>Mark as best</Button>}
+                </Box>}
+                {answer?.availableToEdit && <Box>
+                    <Button size="small"  onClick={() => console.log("da")} variant="contained" sx={{
+                        margin: '5px'
+                    }}>Edit</Button>
+                    <Button size="small" onClick={() => console.log("da")} variant="contained" sx={{
+                        margin: '5px'
+                    }}>Delete</Button>
                 </Box>}
             </Box>
         )
     }
 
     return (
-        <Box>
+        <Box padding="5px">
             <ProgressComponent/>
             {question &&
             <Box>
                 <Box sx={{
-                borderBottom: '1px solid black'
+                    borderBottom: '1px solid black'
                 }}>
                     <Typography mx="20px" fontSize="2em">{question?.title}</Typography>
                     <Typography fontSize="0.8em" mx="20px">Created at: {question?.createdAt}</Typography>

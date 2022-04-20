@@ -11,7 +11,6 @@ public class AnswerCreatedNotification : INotification
     public string CommentAuthorId { get; set; }
 }
 
-
 public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotification>
 {
     private readonly ApplicationContext _context;
@@ -36,19 +35,13 @@ public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotificati
         if (commentAuthor == null || commentAuthor.Id == question.AuthorId)
             return;
 
-        var message = $"{commentAuthor.Username} has answered your question: {question.Title}";
-        var questionRelativeLink = $"/questions/{question.Id}";
-
-        var serializedNotificationContent = JsonConvert.SerializeObject(new
-        {
-            message,
-            link = questionRelativeLink
-        });
+        var message =
+            @$"{commentAuthor.Username} has answered your question: <a href=""http://localhost:3000/question/{question.Id}""{question.Title}</a>>";
 
         var domainNotification = new Notification
         {
             UserId = question.AuthorId,
-            Content = serializedNotificationContent,
+            Content = message,
             CreatedAt = DateTime.UtcNow
         };
 

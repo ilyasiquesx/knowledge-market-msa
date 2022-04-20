@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Notifications.API.Data;
-using Notifications.API.Dto;
 
 namespace Notifications.API.Controllers;
 
@@ -25,19 +23,29 @@ public class NotificationsController : ControllerBase
     {
         var userId = GetUserId();
         var unreadNotificationsForUser = await _context.Notifications
-            .Where(n => n.UserId == userId && !n.IsRead)
+            .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedAt)
-            .Take(10)
+            .Take(20)
             .ToListAsync();
 
         var dto = unreadNotificationsForUser
             .Select(n => new
             {
-                IsRead = n.IsRead,
-                Content = JsonConvert.DeserializeObject<NotificationDto>(n.Content)
+                n.IsRead,
+                n.Content,
+                CreatedAt = n.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
             });
 
         return Ok(dto);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> SetAllReadForUser()
+    {
+        var userId = GetUserId();
+        await _context.Database.ExecuteSqlRawAsync(
+            @$"UPDATE ""Notifications"" SET ""IsRead""=TRUE WHERE ""UserId""='{userId}'");
+        return NoContent();
     }
 
     private string GetUserId()
