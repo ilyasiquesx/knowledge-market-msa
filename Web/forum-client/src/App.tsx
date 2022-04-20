@@ -10,6 +10,7 @@ import {Grid} from "@mui/material";
 import CreateQuestionComponent from "./components/forum/CreateQuestionComponent";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import UpdateQuestionComponent from "./components/forum/UpdateQuestionComponent";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
                             <Route path="/auth" element={<AccountComponent/>}/>
                             <Route path="/question/:id" element={<QuestionComponent/>}/>
                             <Route path="/question/create" element={<CreateQuestionComponent/>}/>
+                            <Route path="/question/edit/:id" element={<UpdateQuestionComponent/>}/>
                         </Routes>
                     </Grid>
                 </Router>

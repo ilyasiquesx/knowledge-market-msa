@@ -1,9 +1,9 @@
 import {FC, useEffect, useState} from "react";
 import Box from "@mui/material/Box";
-import {useParams} from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import Typography from "@mui/material/Typography";
-import {Pagination, TextareaAutosize, TextField} from "@mui/material";
-import {getQuestionById, postAnswer} from "../ApiService";
+import {Pagination, TextareaAutosize} from "@mui/material";
+import {deleteQuestion, getQuestionById, postAnswer, putQuestion} from "../ApiService";
 import Button from "@mui/material/Button";
 import {isAuthenticated} from "../UserService";
 import ProgressComponent from "../ProgressComponent";
@@ -39,6 +39,7 @@ const QuestionComponent: FC<{}> = () => {
     const [answers, setAnswers] = useState<Answer[]>([]);
     const [replyField, setReplyField] = useState<string>('');
     const answersPerPage = 3;
+    const navigate = useNavigate();
 
     useEffect(() => {
         getQuestion(id as string)
@@ -62,7 +63,24 @@ const QuestionComponent: FC<{}> = () => {
         })
     }
 
-    function renderAnswer(answer: Answer, color: string) {
+    function onDeleteClickHandler() {
+        deleteQuestion(id as string).then(() => {
+            navigate('/');
+        })
+    }
+
+    function onEditClickHandler() {
+        navigate(`/question/edit/${id}`);
+    }
+
+    function onUpdateQuestion(body: any) {
+        putQuestion(id as string, body)
+            .then(() => {
+                getQuestion(id as string);
+            });
+    }
+
+    function renderAnswer(answer: Answer, color: string, isBest: boolean) {
         return (
             <Box key={answer.id} sx={{
                 display: 'flex',
@@ -77,11 +95,31 @@ const QuestionComponent: FC<{}> = () => {
                 <Typography>{answer?.content}</Typography>
                 <Typography fontSize="0.8em" align="right">Created by: {answer?.author?.username}</Typography>
                 <Typography fontSize="0.8em" align="right">Created at: {answer?.createdAt}</Typography>
+
+                {question?.availableToEdit && <Box sx={{
+                    textAlign: 'right',
+                    mt: '5px'
+                }}>
+                    {isBest
+                        ? <Button size="small" onClick={() => onUpdateQuestion({
+                            title: question?.title,
+                            content: question?.content,
+                            bestAnswerId: null,
+                        })} variant="contained" sx={{
+                            marginX: '5px'
+                        }}>Unmark best</Button>
+                        : <Button size="small" onClick={() => onUpdateQuestion({
+                            title: question?.title,
+                            content: question?.content,
+                            bestAnswerId: answer?.id,
+                        })} variant="contained" sx={{
+                            marginX: '5px'
+                        }}>Mark as best</Button>}
+                </Box>}
             </Box>
         )
     }
 
-    console.log(question);
     return (
         <Box sx={{
             display: 'flex',
@@ -116,11 +154,23 @@ const QuestionComponent: FC<{}> = () => {
                     <Typography fontSize="0.8em" align="right" marginTop="10px">Asked
                         by: {question?.author?.username}</Typography>
                     <Typography fontSize="0.8em" align="right">Created at: {question?.createdAt}</Typography>
+                    {question?.availableToEdit &&
+                    <Box sx={{
+                        textAlign: 'right',
+                        mt: '5px'
+                    }}>
+                        <Button size="small" onClick={onEditClickHandler} variant="contained" sx={{
+                            marginX: '5px'
+                        }}>Edit</Button>
+                        <Button size="small" onClick={onDeleteClickHandler} variant="contained" sx={{
+                            marginX: '5px'
+                        }}>Delete</Button>
+                    </Box>}
                 </Box>
                 {question?.bestAnswer &&
                 <Box>
                     <Typography align="center">Best answer</Typography>
-                    {renderAnswer(question?.bestAnswer, '#ccffe0')}
+                    {renderAnswer(question?.bestAnswer, '#ccffe0', true)}
                 </Box>}
                 {answers?.length > 0
                     ? <Box sx={{
@@ -135,7 +185,7 @@ const QuestionComponent: FC<{}> = () => {
                     </Box>
                     : <Typography align="center" variant="h4">There are no answers yet</Typography>
                 }
-                {answers?.map(a => renderAnswer(a, '#cce4ff'))}
+                {answers?.map(a => renderAnswer(a, '#cce4ff', false))}
                 {isAuthenticated() &&
                 <Box sx={{
                     display: 'flex',

@@ -26,7 +26,6 @@ const RegisterComponent: FC<{}> = () => {
     const [userRequest, setUserRequest] = useState<RegisterRequest>(emptyRequest);
 
     function onFieldChange(field: string, value: any) {
-        console.log(value);
         setUserRequest({...userRequest, [field]: value} as RegisterRequest);
     }
 

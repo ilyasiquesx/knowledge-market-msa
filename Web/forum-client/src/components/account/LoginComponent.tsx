@@ -26,7 +26,6 @@ const LoginComponent: FC<{}> = () => {
     function onLoginClickHandler() {
         loginApi(loginRequest)
             .then(r => {
-                console.log(r?.data)
                 if (r?.data != null) {
                     const user = {
                         id: r?.data?.id,

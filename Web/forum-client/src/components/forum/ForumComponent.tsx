@@ -14,7 +14,7 @@ interface Question {
     author: User,
     id: number,
     createdAt: string,
-    answersCount : number
+    answersCount: number
 }
 
 interface User {
@@ -32,6 +32,7 @@ const ForumComponent: FC<{}> = () => {
 
     const [questions, setQuestions] = useState<Question[]>([]);
     const [pagesCount, setPagesCount] = useState<number>(0);
+    const [fetchError, setFetchError] = useState<boolean>(false);
     const [paginationRequest, setPaginationRequest] = useState<Pagination>({
         pageSize: 6,
         page: 1
@@ -48,10 +49,9 @@ const ForumComponent: FC<{}> = () => {
             page: pagination.page,
             pageSize: pagination.pageSize
         }), 'fetch-service').then(r => {
-            console.log(r?.data);
             setQuestions(r.data?.questions);
             setPagesCount(r.data?.pageCount);
-        })
+        }).catch(er => setFetchError(true));
     }
 
     function BuildTopic(question: Question) {
@@ -109,7 +109,11 @@ const ForumComponent: FC<{}> = () => {
                 })} variant="outlined" color="primary"/>
             </Box>
             <ProgressComponent/>
-            {questions?.length < 1 && <Typography mt="10px" variant="h4">There are no questions yes. You can ask one.</Typography>}
+            {fetchError
+                ? <Typography mt="10px" variant="h4">Something went wrong. Sorry...</Typography>
+                : questions?.length < 1 &&
+                <Typography mt="10px" variant="h4">There are no questions yes. You can ask one.</Typography>}
+
             <List sx={{
                 display: 'flex',
                 gap: '10px',

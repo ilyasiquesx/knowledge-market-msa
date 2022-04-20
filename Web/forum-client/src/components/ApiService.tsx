@@ -4,7 +4,9 @@ import {toast} from "react-toastify";
 
 const instance = axios.create();
 
-instance.interceptors.response.use((r => r), er => {
+instance.interceptors.response.use((r => {
+    return r;
+}), er => {
     toast.error(er.response.data.message, {
         position: "top-right",
         autoClose: 3000,
@@ -57,6 +59,14 @@ export function postAnswer(body: any) {
 
 export function postQuestion(body: any) {
     return instance.post("http://localhost:4900/forum/Questions", body)
+}
+
+export function putQuestion(id: string, body: any) {
+    return instance.put(`http://localhost:4900/forum/Questions/${id}`, body)
+}
+
+export function deleteQuestion(id: string) {
+    return instance.delete(`http://localhost:4900/forum/Questions/${id}`)
 }
 
 export function getNotifications() {

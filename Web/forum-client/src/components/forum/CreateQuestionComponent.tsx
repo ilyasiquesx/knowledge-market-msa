@@ -35,17 +35,24 @@ const CreateQuestionComponent: FC<{ /*onUserChange: (user: User) => void*/ }> = 
         <Box sx={{
             display: 'flex',
             justifyContent: 'column',
-            margin: '10px'
+            margin: '10px',
         }}>
             <FormControl sx={{padding: '10px'}}>
-                <Typography align="center">Ask a new question</Typography>
-                <TextField label="Title"
-                           variant="filled"
-                           required
-                           value={createRequest?.title}
-                           onChange={(event) => onFieldChange("title", event.target.value)}
-                           sx={{marginY: '10px'}}>
-                </TextField>
+                <Typography align="center" variant="h4" sx={{
+                    marginBottom: '10px'
+                }}>Ask a new question</Typography>
+                <Typography align="center">Your title title</Typography>
+                <TextareaAutosize
+                    style={{
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        minHeight: '100px',
+                        width: '100%'
+                    }}
+                    required
+                    value={createRequest?.title}
+                    onChange={(event) => onFieldChange("title", event.target.value)}/>
+                <Typography align="center">Your content</Typography>
                 <TextareaAutosize
                     style={{
                         marginTop: '10px',

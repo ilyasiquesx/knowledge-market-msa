@@ -6,7 +6,6 @@ import {usePromiseTracker} from "react-promise-tracker";
 
 const ProgressComponent: FC<{}> = () => {
     const {promiseInProgress} = usePromiseTracker({area: 'fetch-service'});
-    console.log(promiseInProgress);
     return (<Box>
         {promiseInProgress ? <Box sx={{
                 width: '100%',
