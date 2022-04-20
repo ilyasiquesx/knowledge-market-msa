@@ -31,7 +31,7 @@ function App() {
                         width="100%"
                         margin="auto"
                     >
-                        <Grid item md={6} xs={12} sx={{
+                        <Grid item xl={6} md={8} xs={12} sx={{
                             borderRight: '1px solid #7194a8',
                             borderLeft: '1px solid #7194a8',
                             height: '100vh'
