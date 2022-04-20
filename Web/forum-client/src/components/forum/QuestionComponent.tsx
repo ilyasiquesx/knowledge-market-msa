@@ -1,8 +1,8 @@
-import {FC, useEffect, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import {useNavigate, useParams} from "react-router-dom"
 import Typography from "@mui/material/Typography";
-import {Pagination, TextareaAutosize} from "@mui/material";
+import {Grid, Pagination, TextareaAutosize} from "@mui/material";
 import {deleteQuestion, getQuestionById, postAnswer, putQuestion} from "../ApiService";
 import Button from "@mui/material/Button";
 import {isAuthenticated} from "../UserService";
@@ -83,81 +83,55 @@ const QuestionComponent: FC<{}> = () => {
     function renderAnswer(answer: Answer, color: string, isBest: boolean) {
         return (
             <Box key={answer.id} sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: '5px',
                 backgroundColor: color,
-                padding: '5px',
-                borderRadius: '5px',
-                border: '2px solid #a9c9fc',
+                padding: '10px',
+                marginY: '10px'
             }}>
                 <Typography>{answer?.content}</Typography>
-                <Typography fontSize="0.8em" align="right">Created by: {answer?.author?.username}</Typography>
-                <Typography fontSize="0.8em" align="right">Created at: {answer?.createdAt}</Typography>
-
+                <Box mt="10px">
+                    <Typography fontSize="0.8em">Created by: {answer?.author?.username}</Typography>
+                    <Typography fontSize="0.8em">Created at: {answer?.createdAt}</Typography>
+                </Box>
                 {question?.availableToEdit && <Box sx={{
                     textAlign: 'right',
-                    mt: '5px'
                 }}>
                     {isBest
                         ? <Button size="small" onClick={() => onUpdateQuestion({
                             title: question?.title,
                             content: question?.content,
                             bestAnswerId: null,
-                        })} variant="contained" sx={{
-                            marginX: '5px'
-                        }}>Unmark best</Button>
+                        })} variant="contained" sx={{}}>Unmark best</Button>
                         : <Button size="small" onClick={() => onUpdateQuestion({
                             title: question?.title,
                             content: question?.content,
                             bestAnswerId: answer?.id,
-                        })} variant="contained" sx={{
-                            marginX: '5px'
-                        }}>Mark as best</Button>}
+                        })} variant="contained" sx={{}}>Mark as best</Button>}
                 </Box>}
             </Box>
         )
     }
 
     return (
-        <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            margin: '10px',
-            flexDirection: 'column',
-            gap: '10px',
-            maxWidth: '500px'
-        }}>
+        <Box>
             <ProgressComponent/>
             {question &&
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                padding: '10px',
-                flexDirection: 'column',
-                gap: '5px',
-            }}>
+            <Box>
                 <Box sx={{
-                    border: '2px solid #a9c9fc',
-                    backgroundColor: '#e6eefc',
-                    borderRadius: '5px',
-                    padding: '5px',
+                borderBottom: '1px solid black'
                 }}>
-                    <Typography fontSize="2em" align="center" sx={{
-                        borderRadius: '5px'
-                    }}>{question?.title}</Typography>
-                    <Typography fontSize="1.2em" align="center" sx={{
-                        minWidth: '320px',
-                        borderRadius: '5px'
-                    }}>{question?.content}</Typography>
-                    <Typography fontSize="0.8em" align="right" marginTop="10px">Asked
+                    <Typography mx="20px" fontSize="2em">{question?.title}</Typography>
+                    <Typography fontSize="0.8em" mx="20px">Created at: {question?.createdAt}</Typography>
+                    <Box sx={{
+                        padding: '20px',
+                        borderTop: '1px solid black',
+                    }}>
+                        <Typography mx="20px" fontSize="1.2em">{question?.content}</Typography>
+                    </Box>
+                    <Typography mx="20px" fontSize="0.8em">Asked
                         by: {question?.author?.username}</Typography>
-                    <Typography fontSize="0.8em" align="right">Created at: {question?.createdAt}</Typography>
                     {question?.availableToEdit &&
                     <Box sx={{
-                        textAlign: 'right',
-                        mt: '5px'
+                        my: '10px'
                     }}>
                         <Button size="small" onClick={onEditClickHandler} variant="contained" sx={{
                             marginX: '5px'
@@ -167,46 +141,51 @@ const QuestionComponent: FC<{}> = () => {
                         }}>Delete</Button>
                     </Box>}
                 </Box>
-                {question?.bestAnswer &&
-                <Box>
-                    <Typography align="center">Best answer</Typography>
-                    {renderAnswer(question?.bestAnswer, '#ccffe0', true)}
-                </Box>}
-                {answers?.length > 0
-                    ? <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center'
-                    }}> <Typography align="center">Other answers</Typography>
-                        <Pagination count={Math.ceil(question?.answers.length as number / answersPerPage)}
-                                    onChange={(e, v) => {
-                                        setAnswers(question?.answers?.slice((v - 1) * answersPerPage, answersPerPage * v) as Answer[])
-                                    }} variant="outlined" color="primary"/>
-                    </Box>
-                    : <Typography align="center" variant="h4">There are no answers yet</Typography>
-                }
-                {answers?.map(a => renderAnswer(a, '#cce4ff', false))}
-                {isAuthenticated() &&
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column'
-                }}>
-                    <Typography align="center">Your reply text</Typography>
-                    <TextareaAutosize
-                        value={replyField}
-                        onChange={(e) => setReplyField(e.target.value)}
-                        style={{
-                            marginBottom: '10px',
-                            width: '100%',
-                            minHeight: '100px',
-                            border: '2px solid #a9c9fc',
-                            backgroundColor: '#e6eefc',
-                            borderRadius: '5px',
-                        }}/>
-                    <Box margin="auto">
-                        <Button size="small" variant="contained" onClick={onReplyClickHandler}>Reply</Button>
-                    </Box>
-                </Box>}
+                <Grid container
+                      alignItems="center"
+                      justifyContent="center">
+                    <Grid item md={6} sm={8} xs={10}>
+                        {question?.bestAnswer &&
+                        <Box mt="10px">
+                            <Typography fontSize="1.4em">Best answer</Typography>
+                            {renderAnswer(question?.bestAnswer, '#ccffe0', true)}
+                        </Box>}
+                        {answers?.length > 0 || question?.bestAnswer !== null
+                            ?
+                            <Box my="10px">
+                                <Typography align="center">Other answers</Typography>
+                                <Box sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                }}>
+                                    <Pagination count={Math.ceil(question?.answers.length as number / answersPerPage)}
+                                                onChange={(e, v) => {
+                                                    setAnswers(question?.answers?.slice((v - 1) * answersPerPage, answersPerPage * v) as Answer[])
+                                                }} variant="outlined" color="primary"/>
+                                </Box>
+                            </Box>
+                            : <Typography align="center" variant="h4">There are no answers yet</Typography>
+                        }
+                        {answers?.map(a => renderAnswer(a, '#cce4ff', false))}
+                        {isAuthenticated() &&
+                        <Grid container direction="column" justifyContent="center">
+                            <Typography align="center">Your reply text</Typography>
+                            <TextareaAutosize
+                                value={replyField}
+                                onChange={(e) => setReplyField(e.target.value)}
+                                style={{
+                                    marginBottom: '10px',
+                                    minHeight: '100px',
+                                    border: '2px solid #a9c9fc',
+                                    backgroundColor: '#e6eefc',
+                                    borderRadius: '5px',
+                                }}/>
+                            <Box margin="auto">
+                                <Button size="small" variant="contained" onClick={onReplyClickHandler}>Reply</Button>
+                            </Box>
+                        </Grid>}
+                    </Grid>
+                </Grid>
             </Box>}
         </Box>)
 }

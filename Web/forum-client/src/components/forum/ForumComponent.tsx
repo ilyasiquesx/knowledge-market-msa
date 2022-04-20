@@ -56,73 +56,73 @@ const ForumComponent: FC<{}> = () => {
 
     function BuildTopic(question: Question) {
         return (
-            <ListItem disablePadding key={question?.id} sx={{
-                padding: '10px',
-                display: 'flex',
-                gap: '10px',
-                border: '2px solid #a9c9fc',
-                borderRadius: '10px',
-                minWidth: '320px',
-                backgroundColor: '#e6eefc'
-            }}>
-
-                <RouterLink to={`question/${question?.id}`}
-                            style={{
-                                flexGrow: '1',
-                                textDecoration: 'none'
-                            }}>
-                    {question?.title}
-                </RouterLink>
-                <Box>
-                    <Typography>Created by: {question?.author.username}</Typography>
-                    <Typography>Created at: {question?.createdAt}</Typography>
-                    <Typography align="right">Answers: {question?.answersCount}</Typography>
-                </Box>
-
-            </ListItem>
+            <Grid item>
+                <Grid container
+                      direction="row"
+                      key={question?.id}
+                      alignItems="center"
+                      sx={{
+                          backgroundColor: '#e6eefc',
+                      }}>
+                    <Grid xl={2} sm={3} xs={4}>
+                        <Typography align="center">Answers</Typography>
+                        <Typography align="center">{question?.answersCount}</Typography>
+                    </Grid>
+                    <Grid xl={10} sm={9} xs={8}>
+                        <RouterLink to={`question/${question?.id}`}
+                                    style={{
+                                        textDecoration: 'none'
+                                    }}>
+                            {question?.title}
+                        </RouterLink>
+                        <Box>
+                            <Typography align="right">Created by: {question?.author.username}</Typography>
+                            <Typography align="right">Created at: {question?.createdAt}</Typography>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Grid>
         )
     }
 
     return (
-        <Box>
-            <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'column',
-                marginBottom: '10px',
-            }}>
-                <Typography variant="h4" textAlign="center" sx={{
-                    margin: '5px',
-                    padding: '10px'
-                }}>Questions list</Typography>
-                <Button variant="contained" sx={{margin: '5px'}} onClick={() => {
-                    navigate("/question/create");
-                }}>Ask a question</Button>
-            </Box>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'center'
-            }}>
+        <Grid sx={{
+            width: '100%'
+        }}>
+            <Grid container alignItems="center" justifyContent="center">
+                <Grid item>
+                    <Typography variant="h4" textAlign="center" sx={{
+                        margin: '5px',
+                        padding: '10px'
+                    }}>Questions list</Typography>
+                </Grid>
+                <Grid item>
+                    <Box>
+                        <Button variant="contained" sx={{margin: '5px'}} onClick={() => {
+                            navigate("/question/create");
+                        }}>Ask a question</Button>
+                    </Box>
+                </Grid>
+            </Grid>
+            <Grid container alignItems="center" justifyContent="center">
                 <Pagination count={pagesCount} onChange={(e, v) => questionsUpdate({
                     page: v,
                     pageSize: paginationRequest.pageSize
                 })} variant="outlined" color="primary"/>
-            </Box>
+            </Grid>
             <ProgressComponent/>
             {fetchError
                 ? <Typography mt="10px" variant="h4">Something went wrong. Sorry...</Typography>
                 : questions?.length < 1 &&
                 <Typography mt="10px" variant="h4">There are no questions yes. You can ask one.</Typography>}
 
-            <List sx={{
-                display: 'flex',
-                gap: '10px',
-                flexDirection: 'column',
-                alignItems: 'space-between'
-            }}>
+            <Grid container
+                  direction="column"
+                  mt="10px"
+                  spacing="10">
                 {questions?.map(BuildTopic)}
-            </List>
-        </Box>)
+            </Grid>
+        </Grid>)
 }
 
 export default ForumComponent;
