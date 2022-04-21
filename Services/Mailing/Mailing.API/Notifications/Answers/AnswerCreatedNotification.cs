@@ -52,7 +52,7 @@ public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotificati
             customParams.TryAdd("commentAuthor", commentAuthor);
             customParams.TryAdd("questionLink", string.Format(_questionLinkTemplate, question.Id));
             var messageDetails = _messageBuilder.BuildMessage(customParams);
-            _smtpSender.Send(question.Author.Username, question.Author.Email, messageDetails.Subject,
+            _smtpSender.Send(question.Author.Id, question.Author.Username, question.Author.Email, messageDetails.Subject,
                 messageDetails.Content);
         }
     }

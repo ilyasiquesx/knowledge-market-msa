@@ -9,7 +9,7 @@ namespace Mailing.API.Smtp;
 
 public interface ISmtpSender
 {
-    public void Send(string username, string email, string subject, string content);
+    public void Send(string userId, string username, string email, string subject, string content);
 }
 
 public class DefaultSmtpSender : ISmtpSender
@@ -31,7 +31,7 @@ public class DefaultSmtpSender : ISmtpSender
         _userGreetings = configuration.GetValue<string>("UserGreetings");
     }
 
-    public void Send(string username, string email, string subject, string content)
+    public void Send(string userId, string username, string email, string subject, string content)
     {
         if (!IsInputValid(username, email, subject, content))
             return;
@@ -45,7 +45,7 @@ public class DefaultSmtpSender : ISmtpSender
 
             message.Body = new TextPart(TextFormat.Plain)
             {
-                Text = BuildServiceMessageWithContent(username, content)
+                Text = BuildServiceMessageWithContent(userId, username, content)
             };
 
             using var smtpClient = new SmtpClient();
@@ -62,14 +62,14 @@ public class DefaultSmtpSender : ISmtpSender
         }
     }
 
-    private string BuildServiceMessageWithContent(string username, string content)
+    private string BuildServiceMessageWithContent(string userId, string username, string content)
     {
         var sb = new StringBuilder();
         sb.AppendFormat(_userGreetings, username);
         sb.AppendLine("\n");
         sb.AppendLine(content);
         sb.AppendLine(_bestWishesInfo);
-        sb.AppendLine(_unsubInfo);
+        sb.AppendFormat(_unsubInfo, userId);
         return sb.ToString();
     }
 

@@ -74,7 +74,10 @@ export function getNotifications() {
     return instance.get(`${baseUrl}/notifications`)
 }
 
-export function putNotifications()
-{
+export function putNotifications() {
     return instance.put(`${baseUrl}/notifications`)
+}
+
+export function putMailing(userId: string) {
+    return instance.put(`${baseUrl}/mailing/${userId}`)
 }

@@ -50,7 +50,7 @@ public class UserCreatedHandler : INotificationHandler<UserCreatedNotification>
             };
 
             var message = _messageBuilder.BuildMessage(customParams);
-            _smtpSender.Send(user.Username, user.Email, message.Subject, message.Content);
+            _smtpSender.Send(user.Id, user.Username, user.Email, message.Subject, message.Content);
         }
     }
 }
