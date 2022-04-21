@@ -43,8 +43,8 @@ public class NotificationsController : ControllerBase
     public async Task<IActionResult> SetAllReadForUser()
     {
         var userId = GetUserId();
-        await _context.Database.ExecuteSqlRawAsync(
-            @$"UPDATE ""Notifications"" SET ""IsRead""=TRUE WHERE ""UserId""='{userId}'");
+        await _context.Database.ExecuteSqlInterpolatedAsync(
+            @$"UPDATE ""Notifications"" SET ""IsRead""=TRUE WHERE ""UserId""={userId}");
         return NoContent();
     }
 

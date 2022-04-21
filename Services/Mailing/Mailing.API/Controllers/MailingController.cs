@@ -14,13 +14,17 @@ public class MailingController : ControllerBase
     {
         _context = context;
     }
-    
+
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id)
     {
-        await _context.Database.ExecuteSqlRawAsync(
-            @$"UPDATE ""Users"" SET ""IsSubscribedForMailing""=FALSE WHERE ""Id""='{id}'");
+        if (Guid.TryParse(id, out var result))
+        {
+            await _context.Database.ExecuteSqlInterpolatedAsync(
+                @$"UPDATE ""Users"" SET ""IsSubscribedForMailing""=FALSE WHERE ""Id""={id}");
+        }
+
         return NoContent();
     }
 }
