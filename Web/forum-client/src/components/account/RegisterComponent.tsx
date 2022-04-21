@@ -31,7 +31,7 @@ const RegisterComponent: FC<{}> = () => {
 
     function onRegisterClickHandler() {
         registerApi(userRequest)
-            .then(r => setUserRequest(emptyRequest));
+            .then(() => setUserRequest(emptyRequest));
     }
 
     return (

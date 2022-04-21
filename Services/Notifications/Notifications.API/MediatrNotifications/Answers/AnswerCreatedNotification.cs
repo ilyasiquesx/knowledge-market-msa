@@ -36,7 +36,7 @@ public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotificati
             return;
 
         var message =
-            @$"{commentAuthor.Username} has answered your question: <a href=""http://localhost:3000/question/{question.Id}""{question.Title}</a>>";
+            @$"{commentAuthor.Username} has answered your question: <a href=""http://localhost:3000/question/{question.Id}"">{question.Title}</a>";
 
         var domainNotification = new Notification
         {

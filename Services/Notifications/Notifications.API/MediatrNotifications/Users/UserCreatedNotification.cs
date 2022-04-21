@@ -34,7 +34,7 @@ public class UserCreatedHandler : INotificationHandler<UserCreatedNotification>
         
         _context.Notifications.Add(new Notification
         {
-            Content = "Thank you to chose our service! We hope you will find answers to your questions!",
+            Content = "Thank you for choosing our service! We hope you will find answers to your questions!",
             CreatedAt = DateTime.UtcNow,
             UserId = notification.UserId
         });

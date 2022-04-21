@@ -1,6 +1,5 @@
-import {FC, useEffect, useState} from "react";
-import {Box, Button, Checkbox, FormControl, FormControlLabel, TextareaAutosize, TextField} from "@mui/material";
-import {isAuthenticated} from "../UserService";
+import {FC, useState} from "react";
+import {Box, Button, FormControl, TextareaAutosize} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
@@ -11,7 +10,7 @@ interface CreateQuestionRequest {
     content: string,
 }
 
-const CreateQuestionComponent: FC<{ /*onUserChange: (user: User) => void*/ }> = (/*{onUserChange}*/) => {
+const CreateQuestionComponent: FC<{}> = () => {
 
     const [createRequest, setQuestionRequest] = useState<CreateQuestionRequest>({
         title: '',

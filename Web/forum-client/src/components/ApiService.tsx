@@ -3,6 +3,7 @@ import {clearUser, getUser} from "./UserService";
 import {toast} from "react-toastify";
 
 const instance = axios.create();
+const baseUrl = process.env.REACT_APP_GATEWAY_URL;
 
 instance.interceptors.response.use((r => {
     return r;
@@ -33,15 +34,15 @@ instance.interceptors.request.use((r) => {
 });
 
 export function registerApi(body: any) {
-    return instance.post("http://localhost:4900/auth/Register", body)
+    return instance.post(`${baseUrl}/auth/Register`, body)
 }
 
 export function loginApi(body: any) {
-    return instance.post("http://localhost:4900/auth/Login", body)
+    return instance.post(`${baseUrl}/auth/Login`, body)
 }
 
 export function getQuestions(request: any) {
-    return instance.get("http://localhost:4900/forum/questions/", {
+    return instance.get(`${baseUrl}/forum/questions/`, {
         params: {
             pageSize: request.pageSize,
             page: request.page
@@ -50,30 +51,30 @@ export function getQuestions(request: any) {
 }
 
 export function getQuestionById(id: string) {
-    return instance.get(`http://localhost:4900/forum/questions/${id}`);
+    return instance.get(`${baseUrl}/forum/questions/${id}`);
 }
 
 export function postAnswer(body: any) {
-    return instance.post("http://localhost:4900/forum/Answers", body)
+    return instance.post(`${baseUrl}/forum/Answers`, body)
 }
 
 export function postQuestion(body: any) {
-    return instance.post("http://localhost:4900/forum/Questions", body)
+    return instance.post(`${baseUrl}/forum/Questions`, body)
 }
 
 export function putQuestion(id: string, body: any) {
-    return instance.put(`http://localhost:4900/forum/Questions/${id}`, body)
+    return instance.put(`${baseUrl}/forum/Questions/${id}`, body)
 }
 
 export function deleteQuestion(id: string) {
-    return instance.delete(`http://localhost:4900/forum/Questions/${id}`)
+    return instance.delete(`${baseUrl}/forum/Questions/${id}`)
 }
 
 export function getNotifications() {
-    return instance.get("http://localhost:4900/notifications")
+    return instance.get(`${baseUrl}/notifications`)
 }
 
 export function putNotifications()
 {
-    return instance.put("http://localhost:4900/notifications")
+    return instance.put(`${baseUrl}/notifications`)
 }

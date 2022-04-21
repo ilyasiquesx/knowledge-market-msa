@@ -6,9 +6,9 @@ import {isAuthenticated} from "../UserService";
 import {useNavigate} from "react-router-dom";
 
 
-const AccountComponent: FC<{ /*onUserChange: (user: User) => void*/ }> = (/*{onUserChange}*/) => {
-    const [currentForm, setCurrentFrom] = useState(<LoginComponent /*onUserChange={onUserChange}*//>);
-    const navigate = useNavigate();
+const AccountComponent: FC<{}> = () => {
+    const [currentForm, setCurrentFrom] = useState(<LoginComponent/>);
+
     useEffect(() => {
         if (isAuthenticated()) {
             window.location.assign("/");
@@ -16,7 +16,7 @@ const AccountComponent: FC<{ /*onUserChange: (user: User) => void*/ }> = (/*{onU
     }, [])
 
     function setLogin() {
-        setCurrentFrom(<LoginComponent /*onUserChange={onUserChange}*//>)
+        setCurrentFrom(<LoginComponent/>)
     }
 
     function setRegister() {

@@ -21,8 +21,6 @@ const emptyLoginRequest = {
 const LoginComponent: FC<{}> = () => {
     const [loginRequest, setLoginRequest] = useState<LoginRequest>(emptyLoginRequest);
 
-    const navigate = useNavigate();
-
     function onLoginClickHandler() {
         loginApi(loginRequest)
             .then(r => {

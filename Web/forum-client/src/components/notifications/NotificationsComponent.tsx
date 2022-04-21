@@ -15,9 +15,7 @@ const NotificationsComponent: FC<{}> = () => {
     const [notifications, setNotification] = useState<Notification[]>([]);
 
     useEffect(() => {
-        if (isAuthenticated()) {
-            trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r.data))
-        }
+        setNotifications();
     }, [])
 
     function renderNotification(item: Notification) {
@@ -33,8 +31,15 @@ const NotificationsComponent: FC<{}> = () => {
         </Box>)
     }
 
+    function setNotifications() {
+        if (isAuthenticated()) {
+            trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r.data))
+        }
+    }
+
     function onMarkAsReadClickHandler() {
         putNotifications().then(() => {
+            setNotifications();
         })
     }
 

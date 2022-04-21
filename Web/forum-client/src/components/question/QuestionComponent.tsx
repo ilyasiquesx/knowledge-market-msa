@@ -50,7 +50,9 @@ const QuestionComponent: FC<{}> = () => {
             .then(r => {
                 setQuestion(r?.data)
                 setAnswers(r?.data.answers.slice(0, answersPerPage) as Answer[])
-            });
+            }).catch(() => {
+                navigate("/");
+        });
     }
 
     function onReplyClickHandler() {

@@ -1,13 +1,12 @@
 import React, {FC, useEffect, useState} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {Grid, List, ListItem, Pagination} from "@mui/material";
-import {BrowserRouter as Router, Link as RouterLink, useNavigate} from "react-router-dom"
+import {Grid, Pagination} from "@mui/material";
+import {Link as RouterLink, useNavigate} from "react-router-dom"
 import {getQuestions} from "../ApiService";
 import Button from "@mui/material/Button";
 import ProgressComponent from "../ProgressComponent";
 import {trackPromise} from "react-promise-tracker";
-import NavbarComponent from "../NavbarComponent";
 
 interface Question {
     title: string,
@@ -104,22 +103,24 @@ const ForumComponent: FC<{}> = () => {
                     </Box>
                 </Grid>
             </Grid>
-            <Grid container alignItems="center" justifyContent="center">
+            <ProgressComponent/>
+            {fetchError
+                ? <Typography align="center" mt="10px" variant="h4">Something went wrong. Sorry.</Typography>
+                : questions?.length < 1 &&
+                <Typography align="center" mt="10px" variant="h4">There are no questions yes. You can ask
+                    one.</Typography>}
+
+            {questions?.length > 0 && <Grid container alignItems="center" justifyContent="center">
                 <Pagination count={pagesCount} onChange={(e, v) => questionsUpdate({
                     page: v,
                     pageSize: paginationRequest.pageSize
                 })} variant="outlined" color="primary"/>
-            </Grid>
-            <ProgressComponent/>
-            {fetchError
-                ? <Typography mt="10px" variant="h4">Something went wrong. Sorry...</Typography>
-                : questions?.length < 1 &&
-                <Typography mt="10px" variant="h4">There are no questions yes. You can ask one.</Typography>}
-
+            </Grid>}
             <Grid container
                   direction="column"
                   mt="10px"
                   spacing="10">
+
                 {questions?.map(BuildTopic)}
             </Grid>
         </Grid>)

@@ -1,9 +1,9 @@
 import {FC, useEffect, useState} from "react";
-import {Box, Button, Checkbox, FormControl, FormControlLabel, TextareaAutosize, TextField} from "@mui/material";
+import {Box, Button, FormControl, TextareaAutosize} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {getQuestionById, postQuestion, putQuestion} from "../ApiService";
+import {getQuestionById, putQuestion} from "../ApiService";
 import {getUser} from "../UserService";
 
 export interface UpdateQuestionRequest {
@@ -42,6 +42,8 @@ const UpdateQuestionComponent: FC<{}> = () => {
                 title: title,
                 content: content,
             })
+        }).catch(() => {
+            navigate("/");
         })
     }, [])
 
