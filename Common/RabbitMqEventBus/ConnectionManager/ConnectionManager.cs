@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.Logging;
+using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMqEventBus.Configuration;
@@ -48,7 +49,18 @@ internal sealed class ConnectionManager : IConnectionManager
             ClientProvidedName = Assembly.GetEntryAssembly()?.GetName().Name
         };
 
-        var connection = connectionFactory.CreateConnection();
+        var policy = Policy
+            .Handle<Exception>()
+            .WaitAndRetry(options.RetryCountToConnect, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
+                (exception, span, attempt, context) =>
+                {
+                    _logger.LogWarning(exception,
+                        "{Message} {TimeSpan} {Attempt}",
+                        "Retrying to reconnect after exception",
+                        span, attempt);
+                });
+
+        var connection = policy.Execute(() => connectionFactory.CreateConnection());
         connection.CallbackException += ConnectionOnCallbackException;
         connection.ConnectionShutdown += ConnectionOnConnectionShutdown;
 
@@ -58,15 +70,11 @@ internal sealed class ConnectionManager : IConnectionManager
     private void ConnectionOnConnectionShutdown(object sender, ShutdownEventArgs e)
     {
         _logger.LogWarning("{Message} {@EventArgs}", "Shutdown connection. Reconnecting...", e);
-        _connection?.Dispose();
-        _connection = CreateConnection(_connectionOptions);
     }
 
     private void ConnectionOnCallbackException(object sender, CallbackExceptionEventArgs e)
     {
         _logger.LogWarning(e.Exception, "Connection thrown an exception");
-        _connection?.Dispose();
-        _connection = CreateConnection(_connectionOptions);
     }
 
     public void Dispose()

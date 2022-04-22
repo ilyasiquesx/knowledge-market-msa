@@ -13,8 +13,7 @@ internal sealed class MessageHandler : IMessageHandler
 {
     private readonly ILogger<MessageHandler> _logger;
 
-    private IModel _model;
-    private readonly IConnectionManager _connectionManager;
+    private readonly IModel _model;
     private IMessageCallback _callback;
 
     private readonly string _queueName;
@@ -25,13 +24,12 @@ internal sealed class MessageHandler : IMessageHandler
         IConnectionManager connectionManager)
     {
         _logger = logger;
-        _connectionManager = connectionManager;
 
         var options = handlerOptions ?? throw new ArgumentNullException(nameof(handlerOptions));
         _exchangeName = options.ExchangeName;
         _queueName = options.QueueName;
 
-        _model = _connectionManager.CreateModel();
+        _model = connectionManager.CreateModel();
     }
 
     public void StartConsume(IMessageCallback callback)
@@ -105,9 +103,6 @@ internal sealed class MessageHandler : IMessageHandler
     {
         _logger.LogWarning("{Message} {ReplyText}", "Consumer shut down. Recreating consumer channel...",
             @event.ReplyText);
-        _model?.Dispose();
-        _model = _connectionManager.CreateModel();
-        DeclareQueueAndConsume(_queueName, _exchangeName);
         return Task.CompletedTask;
     }
 
