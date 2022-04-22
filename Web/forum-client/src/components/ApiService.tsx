@@ -8,7 +8,7 @@ const baseUrl = process.env.REACT_APP_GATEWAY_URL;
 instance.interceptors.response.use((r => {
     return r;
 }), er => {
-    toast.error(er.response.data.message, {
+    toast.error(er.response.data.message || er.response.data.title, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -30,6 +30,7 @@ instance.interceptors.request.use((r) => {
     r.headers = {
         Authorization: `Bearer ${getUser()?.accessToken}`
     }
+
     return r;
 });
 
@@ -80,4 +81,16 @@ export function putNotifications() {
 
 export function putMailing(userId: string) {
     return instance.put(`${baseUrl}/mailing/${userId}`)
+}
+
+export function putAnswer(id: string, body: any) {
+    return instance.put(`${baseUrl}/forum/Answers/${id}`, body)
+}
+
+export function deleteAnswer(id: string) {
+    return instance.delete(`${baseUrl}/forum/Answers/${id}`)
+}
+
+export function getAnswerById(id: string) {
+    return instance.get(`${baseUrl}/forum/Answers/${id}`)
 }

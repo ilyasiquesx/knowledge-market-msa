@@ -1,4 +1,5 @@
-﻿using Authentication.API.Entities;
+﻿using System.Net.Mail;
+using Authentication.API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMqEventBus.MessagePublisher;
@@ -23,10 +24,15 @@ public class AccountController : ApiController
         if (!string.Equals(model.Password, model.ConfirmPassword))
             return BadRequest(new { Message = "Passwords must match" });
 
+        if (!MailAddress.TryCreate(model.Email, out var address))
+        {
+            return BadRequest(new { Message = "Email is invalid" });
+        }
+
         var user = new User
         {
             UserName = model.Username,
-            Email = model.Email
+            Email = address.Address
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -41,6 +47,7 @@ public class AccountController : ApiController
             model.IsSubscribedForMailing,
             user.Email
         });
+        
 
         return Ok();
     }

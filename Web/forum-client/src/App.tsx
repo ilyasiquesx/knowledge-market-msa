@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import UpdateQuestionComponent from "./components/question/UpdateQuestionComponent";
 import NotificationsComponent from "./components/notifications/NotificationsComponent";
 import UnsubscribeComponent from "./components/mailing/UnsubscribeComponent";
+import EditAnswerComponent from "./components/answer/EditAnswerComponent";
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
                                 <Route path="/question/edit/:id" element={<UpdateQuestionComponent/>}/>
                                 <Route path="/notifications" element={<NotificationsComponent/>}/>
                                 <Route path="/unsub/:userId" element={<UnsubscribeComponent/>}/>
+                                <Route path="/answer/edit/:id/question/:questionId" element={<EditAnswerComponent/>}/>
                             </Routes>
                         </Grid>
                     </Grid>

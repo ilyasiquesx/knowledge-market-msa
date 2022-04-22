@@ -1,6 +1,7 @@
 ﻿using Forum.Core.Entities.Answers.Commands.Create;
 using Forum.Core.Entities.Answers.Commands.Delete;
 using Forum.Core.Entities.Answers.Commands.Update;
+using Forum.Core.Entities.Answers.Queries.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,5 +33,12 @@ public class AnswersController : ApiController
     {
         await Mediator.Send(new DeleteAnswerCommand(id));
         return Ok();
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetById(long id)
+    {
+        var result = await Mediator.Send(new GetAnswerByIdQuery(id));
+        return Ok(result);
     }
 }

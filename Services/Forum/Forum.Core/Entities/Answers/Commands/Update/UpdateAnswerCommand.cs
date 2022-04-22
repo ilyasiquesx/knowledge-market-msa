@@ -1,4 +1,5 @@
-﻿using Forum.Core.Services;
+﻿using System.Text.Json.Serialization;
+using Forum.Core.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

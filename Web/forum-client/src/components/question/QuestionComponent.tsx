@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import {useNavigate, useParams} from "react-router-dom"
 import Typography from "@mui/material/Typography";
 import {Grid, Pagination, TextareaAutosize} from "@mui/material";
-import {deleteQuestion, getQuestionById, postAnswer, putQuestion} from "../ApiService";
+import {deleteAnswer, deleteQuestion, getQuestionById, postAnswer, putQuestion} from "../ApiService";
 import Button from "@mui/material/Button";
 import {isAuthenticated} from "../UserService";
 import ProgressComponent from "../ProgressComponent";
@@ -51,8 +51,15 @@ const QuestionComponent: FC<{}> = () => {
                 setQuestion(r?.data)
                 setAnswers(r?.data.answers.slice(0, answersPerPage) as Answer[])
             }).catch(() => {
-                navigate("/");
+            navigate("/");
         });
+    }
+
+    function onUpdateQuestion(body: any) {
+        putQuestion(id as string, body)
+            .then(() => {
+                getQuestion(id as string);
+            });
     }
 
     function onReplyClickHandler() {
@@ -75,11 +82,14 @@ const QuestionComponent: FC<{}> = () => {
         navigate(`/question/edit/${id}`);
     }
 
-    function onUpdateQuestion(body: any) {
-        putQuestion(id as string, body)
-            .then(() => {
-                getQuestion(id as string);
-            });
+    function onEditAnswerClickHandler(answerId: string) {
+        navigate(`/answer/edit/${answerId}/question/${id}`)
+    }
+
+    function onDeleteAnswerClickHandler(answerId: string) {
+        deleteAnswer(answerId as string).then(() => {
+            getQuestion(id as string)
+        })
     }
 
     function renderAnswer(answer: Answer, color: string, isBest: boolean) {
@@ -114,12 +124,14 @@ const QuestionComponent: FC<{}> = () => {
                         }}>Mark as best</Button>}
                 </Box>}
                 {answer?.availableToEdit && <Box>
-                    <Button size="small"  onClick={() => console.log("da")} variant="contained" sx={{
+                    <Button size="small" onClick={() => onEditAnswerClickHandler(answer?.id.toString())} variant="contained" sx={{
                         margin: '5px'
                     }}>Edit</Button>
-                    <Button size="small" onClick={() => console.log("da")} variant="contained" sx={{
-                        margin: '5px'
-                    }}>Delete</Button>
+                    <Button size="small" onClick={() => onDeleteAnswerClickHandler(answer?.id.toString())}
+                            variant="contained"
+                            sx={{
+                                margin: '5px'
+                            }}>Delete</Button>
                 </Box>}
             </Box>
         )
