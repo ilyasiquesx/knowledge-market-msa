@@ -7,6 +7,8 @@ import {setUser, User} from "../UserService";
 import {FormControl, TextField} from "@mui/material";
 import {loginApi} from "../ApiService";
 import Typography from "@mui/material/Typography";
+import ProgressComponent from "../ProgressComponent";
+import {trackPromise} from "react-promise-tracker";
 
 interface LoginRequest {
     username: string,
@@ -22,7 +24,7 @@ const LoginComponent: FC<{}> = () => {
     const [loginRequest, setLoginRequest] = useState<LoginRequest>(emptyLoginRequest);
 
     function onLoginClickHandler() {
-        loginApi(loginRequest)
+        trackPromise(loginApi(loginRequest), 'fetch-service')
             .then(r => {
                 if (r?.data != null) {
                     const user = {
@@ -59,6 +61,7 @@ const LoginComponent: FC<{}> = () => {
                            sx={{marginY: '10px'}}>
                 </TextField>
                 <Button variant="contained" onClick={onLoginClickHandler}>Sign in</Button>
+                <ProgressComponent/>
             </FormControl>
         </Box>)
 }

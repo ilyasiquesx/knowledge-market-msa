@@ -3,7 +3,6 @@ import {Box, Button} from "@mui/material";
 import LoginComponent from "./LoginComponent";
 import RegisterComponent from "./RegisterComponent";
 import {isAuthenticated} from "../UserService";
-import {useNavigate} from "react-router-dom";
 
 
 const AccountComponent: FC<{}> = () => {

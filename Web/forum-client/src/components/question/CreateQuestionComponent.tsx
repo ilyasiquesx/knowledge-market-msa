@@ -4,6 +4,8 @@ import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import {postQuestion} from "../ApiService";
+import ProgressComponent from "../ProgressComponent";
+import {trackPromise} from "react-promise-tracker";
 
 interface CreateQuestionRequest {
     title: string,
@@ -24,7 +26,7 @@ const CreateQuestionComponent: FC<{}> = () => {
     }
 
     function onCreateQuestionHandler() {
-        postQuestion(createRequest)
+        trackPromise(postQuestion(createRequest), 'fetch-service')
             .then(() => {
                 navigate('/');
             })
@@ -65,6 +67,7 @@ const CreateQuestionComponent: FC<{}> = () => {
                     value={createRequest?.content}
                     onChange={(event) => onFieldChange("content", event.target.value)}/>
                 <Button variant="contained" onClick={onCreateQuestionHandler}>Ask</Button>
+                <ProgressComponent/>
             </FormControl>
         </Box>
     )

@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Notifications.API.Data;
 
 namespace Notifications.API.MediatrNotifications.Answers;

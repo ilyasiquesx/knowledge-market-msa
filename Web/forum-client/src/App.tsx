@@ -49,7 +49,12 @@ function App() {
                         </Grid>
                     </Grid>
                 </Router>
-                <ToastContainer/>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    closeOnClick={true}
+                    pauseOnHover={true}
+                    draggable={true}/>
             </header>
         </div>
     );

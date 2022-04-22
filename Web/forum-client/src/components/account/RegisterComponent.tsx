@@ -5,6 +5,8 @@ import {FC, useState} from "react";
 import {Checkbox, FormControl, FormControlLabel, TextField} from "@mui/material";
 import {registerApi} from "../ApiService";
 import Typography from "@mui/material/Typography";
+import ProgressComponent from "../ProgressComponent";
+import {trackPromise} from "react-promise-tracker";
 
 interface RegisterRequest {
     username: string,
@@ -30,7 +32,7 @@ const RegisterComponent: FC<{}> = () => {
     }
 
     function onRegisterClickHandler() {
-        registerApi(userRequest)
+        trackPromise(registerApi(userRequest), 'fetch-service')
             .then((r) => {
                 if (r?.status == 200) {
                     setUserRequest(emptyRequest)
@@ -76,6 +78,7 @@ const RegisterComponent: FC<{}> = () => {
                                                      }}
                                                      defaultChecked/>} label="Sub to mailing"/>
                 <Button variant="contained" onClick={onRegisterClickHandler}>Sign up</Button>
+                <ProgressComponent/>
             </FormControl>
         </Box>)
 }

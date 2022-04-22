@@ -8,20 +8,14 @@ const baseUrl = process.env.REACT_APP_GATEWAY_URL;
 instance.interceptors.response.use((r => {
     return r;
 }), er => {
-    toast.error(er.response.data.message || er.response.data.title, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    });
-
-    if (er.response.status == 403 || er.response.status == 401) {
+    if (er.response.status == 401) {
         clearUser();
         window.location.assign("/auth");
     }
+
+    toast.error(er?.response?.data?.message
+        || er?.response?.data?.title
+        || er?.message);
 
     return er;
 })
