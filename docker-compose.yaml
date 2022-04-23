@@ -84,7 +84,7 @@ services:
     ports:
       - ${GATEWAY_PORT}:80
     environment:
-      - IsInDocker=true
+      - DOTNET_RUNNING_IN_CONTAINER=true
       - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
     networks:
       - knowledge-market-network

@@ -6,7 +6,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
-builder.Configuration.AddJsonFile(builder.Configuration.GetValue<bool>("IsInDocker")
+builder.Configuration.AddJsonFile(builder.Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER")
     ? "ocelot.docker.json"
     : "ocelot.json");
 
