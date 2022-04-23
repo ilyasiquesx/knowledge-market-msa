@@ -55,7 +55,7 @@ services:
   
   maildev:
     container_name: maildev
-    image: maildev/maildev
+    image: maildev/maildev:2.0.2
     ports:
       - "8080:1080"
     networks:
