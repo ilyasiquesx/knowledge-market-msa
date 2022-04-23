@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Forum.API.Filters;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

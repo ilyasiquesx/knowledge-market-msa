@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Forum.API.BackgroundTasks;
+using Forum.API.Middlewares;
 using Forum.API.Options;
 using Forum.Core.Entities.Users.Notifications;
 using Forum.Core.Services;
@@ -58,26 +59,7 @@ builder.WebHost.UseSerilog();
 
 var app = builder.Build();
 await MigrateDb(app);
-app.Use(async (context, next) =>
-{
-    var logger = context.Request.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-    try
-    {
-        await next();
-    }
-    catch (Exception e)
-    {
-        if (context.Response.HasStarted)
-            return;
-        
-        logger.LogError(e, "Global exception handling");
-        context.Response.StatusCode = 500;
-        await context.Response.WriteAsJsonAsync(new
-        {
-            e.Message
-        });
-    }
-});
+app.UseMiddleware<UnhandledExceptionHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

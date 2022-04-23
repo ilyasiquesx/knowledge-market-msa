@@ -1,8 +1,7 @@
 ﻿using Forum.Core;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Forum.API;
+namespace Forum.API.Filters;
 
 public class DomainExceptionFilterAttribute : Attribute, IAsyncExceptionFilter
 {

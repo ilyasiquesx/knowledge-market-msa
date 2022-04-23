@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Notifications.API.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220411144356_Initial2")]
-    partial class Initial2
+    [Migration("20220423090402_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

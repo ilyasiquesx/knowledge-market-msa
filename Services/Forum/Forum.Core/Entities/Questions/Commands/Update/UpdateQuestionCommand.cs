@@ -19,12 +19,17 @@ public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionComman
     private readonly IUserService _userService;
     private readonly IDomainContext _context;
     private readonly IIntegrationEventService _eventService;
+    private readonly IDateService _dateService;
 
-    public UpdateQuestionCommandHandler(IUserService userService, IDomainContext context, IIntegrationEventService eventService)
+    public UpdateQuestionCommandHandler(IUserService userService, 
+        IDomainContext context, 
+        IIntegrationEventService eventService, 
+        IDateService dateService)
     {
         _userService = userService;
         _context = context;
         _eventService = eventService;
+        _dateService = dateService;
     }
 
     public async Task<Unit> Handle(UpdateQuestionCommand request, CancellationToken cancellationToken)
@@ -45,6 +50,7 @@ public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionComman
         question.Title = request.Title;
         question.Content = request.Content;
         question.BestAnswerId = request.BestAnswerId;
+        question.UpdatedAt = _dateService.Now;
 
         await _context.SaveChangesAsync(cancellationToken);
         await _eventService.Publish("QuestionUpdated", new

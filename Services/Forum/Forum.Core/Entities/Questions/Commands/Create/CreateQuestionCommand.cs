@@ -39,6 +39,7 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionComman
             Title = request.Title,
             Content = request.Content,
             CreatedAt = _dateService.Now,
+            UpdatedAt = _dateService.Now
         };
 
         user!.Questions.Add(question);

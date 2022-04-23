@@ -19,7 +19,7 @@ public class CreateAnswerCommandHandler : IRequestHandler<CreateAnswerCommand>
 
     public CreateAnswerCommandHandler(IDomainContext context,
         IDateService dateService,
-        IIntegrationEventService eventService, 
+        IIntegrationEventService eventService,
         IUserService userService)
     {
         _context = context;
@@ -43,8 +43,11 @@ public class CreateAnswerCommandHandler : IRequestHandler<CreateAnswerCommand>
         {
             AuthorId = user!.Id,
             Content = request.Content,
-            CreatedAt = _dateService.Now
+            CreatedAt = _dateService.Now,
+            UpdatedAt = _dateService.Now
         });
+        
+        question.UpdatedAt = _dateService.Now;
 
         await _context.SaveChangesAsync(cancellationToken);
         await _eventService.Publish("AnswerCreated", new

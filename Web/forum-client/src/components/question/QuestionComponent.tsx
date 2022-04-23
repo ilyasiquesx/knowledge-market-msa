@@ -17,6 +17,7 @@ interface Question {
     bestAnswer: Answer,
     answers: Answer[],
     createdAt: string,
+    updatedAt: string,
     availableToEdit: boolean,
 }
 
@@ -29,6 +30,7 @@ interface Answer {
     content: string,
     author: User,
     createdAt: string,
+    updatedAt: string,
     availableToEdit: boolean,
 }
 
@@ -103,6 +105,7 @@ const QuestionComponent: FC<{}> = () => {
                 <Box mt="10px">
                     <Typography fontSize="0.8em">Created by: {answer?.author?.username}</Typography>
                     <Typography fontSize="0.8em">Created at: {answer?.createdAt}</Typography>
+                    <Typography fontSize="0.8em">Updated at: {answer?.updatedAt}</Typography>
                 </Box>
                 {question?.availableToEdit && <Box sx={{
                     textAlign: 'right',
@@ -147,6 +150,7 @@ const QuestionComponent: FC<{}> = () => {
                 }}>
                     <Typography mx="20px" fontSize="2em">{question?.title}</Typography>
                     <Typography fontSize="0.8em" mx="20px">Created at: {question?.createdAt}</Typography>
+                    <Typography fontSize="0.8em" mx="20px">Updated at: {question?.updatedAt}</Typography>
                     <Box sx={{
                         padding: '20px',
                         borderTop: '1px solid black',

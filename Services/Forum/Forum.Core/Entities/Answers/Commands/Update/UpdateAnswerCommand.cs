@@ -15,11 +15,14 @@ public class UpdateAnswerCommandHandler : IRequestHandler<UpdateAnswerCommand>
 {
     private readonly IDomainContext _context;
     private readonly IUserService _userService;
+    private readonly IDateService _dateService;
 
-    public UpdateAnswerCommandHandler(IDomainContext context, IUserService userService)
+    public UpdateAnswerCommandHandler(IDomainContext context, IUserService userService, 
+        IDateService dateService)
     {
         _context = context;
         _userService = userService;
+        _dateService = dateService;
     }
 
     public async Task<Unit> Handle(UpdateAnswerCommand request, CancellationToken cancellationToken)
@@ -34,6 +37,7 @@ public class UpdateAnswerCommandHandler : IRequestHandler<UpdateAnswerCommand>
         ThrowIf.False(whetherUserIsAuthor, "You can't edit other user' answer");
 
         answer.Content = request.Content;
+        answer.UpdatedAt = _dateService.Now;
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

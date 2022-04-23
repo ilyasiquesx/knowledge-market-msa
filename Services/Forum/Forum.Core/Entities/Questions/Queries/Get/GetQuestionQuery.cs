@@ -43,7 +43,7 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
 
         AnswerDto bestAnswerDto = null;
         var requestedBy = _userService.UserId;
-        
+
         if (bestAnswer != null)
         {
             answers = answers.Where(a => a.Id != bestAnswer.Id).ToList();
@@ -59,6 +59,7 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
             Answers = Builders.Answers.BuildAnswersDto(answers, requestedBy),
             BestAnswer = bestAnswerDto,
             CreatedAt = question.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
+            UpdatedAt = question.UpdatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
             AvailableToEdit = requestedBy == question.AuthorId
         };
 

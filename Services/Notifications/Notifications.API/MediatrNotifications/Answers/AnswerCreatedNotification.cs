@@ -13,10 +13,14 @@ public class AnswerCreatedNotification : INotification
 public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotification>
 {
     private readonly ApplicationContext _context;
+    private readonly string _clientUrl;
+    private readonly string _questionLinkTemplate;
 
-    public AnswerCreatedHandler(ApplicationContext context)
+    public AnswerCreatedHandler(ApplicationContext context, IConfiguration configuration)
     {
         _context = context;
+        _clientUrl = configuration.GetValue<string>("ClientUrl");
+        _questionLinkTemplate = configuration.GetValue<string>("QuestionLinkTemplate");
     }
 
     public async Task Handle(AnswerCreatedNotification notification, CancellationToken cancellationToken)
@@ -34,8 +38,10 @@ public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotificati
         if (commentAuthor == null || commentAuthor.Id == question.AuthorId)
             return;
 
+        var questionLink = string.Format(_questionLinkTemplate, _clientUrl, question.Id);
+
         var message =
-            @$"{commentAuthor.Username} has answered your question: <a href=""http://localhost:3000/question/{question.Id}"">{question.Title}</a>";
+            @$"{commentAuthor.Username} has answered your question: <a href=""{questionLink}"">{question.Title}</a>";
 
         var domainNotification = new Notification
         {

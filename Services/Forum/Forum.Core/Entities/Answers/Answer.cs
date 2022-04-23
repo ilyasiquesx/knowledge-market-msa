@@ -12,4 +12,5 @@ public class Answer
     public string AuthorId { get; set; }
     public User Author { get; set; }
     public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

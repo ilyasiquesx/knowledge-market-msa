@@ -9,7 +9,7 @@ public class QuestionDto
     public AnswerDto BestAnswer { get; set; }
     public IEnumerable<AnswerDto> Answers { get; set; }
     public string CreatedAt { get; set; }
-
+    public string UpdatedAt { get; set; }
     public bool AvailableToEdit { get; set; }
 }
 
@@ -19,5 +19,6 @@ public class AnswerDto
     public string Content { get; set; }
     public AuthorDto Author { get; set; }
     public string CreatedAt { get; set; }
+    public string UpdatedAt { get; set; }
     public bool AvailableToEdit { get; set; }
 }

@@ -33,6 +33,7 @@ public static class Builders
                 Author = Users.BuildAuthorDto(answer.Author),
                 Content = answer.Content,
                 CreatedAt = answer.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
+                UpdatedAt = answer.UpdatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
                 AvailableToEdit = requestedBy == answer.AuthorId
             };
         }
@@ -60,6 +61,7 @@ public static class Builders
                 Title = question.Title,
                 Author = Users.BuildAuthorDto(question.Author),
                 CreatedAt = question.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
+                UpdatedAt = question.UpdatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
                 AnswersCount = question.Answers.Count
             };
         }

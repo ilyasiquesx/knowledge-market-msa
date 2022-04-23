@@ -13,6 +13,7 @@ RUN REACT_APP_GATEWAY_URL=${GATEWAY_URL} \
   npm run build
 
 FROM nginx:1.17-alpine
+COPY ./Web/forum-client/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -15,6 +15,7 @@ public interface ISmtpSender
 public class DefaultSmtpSender : ISmtpSender
 {
     private readonly SmtpOptions _smtpOptions;
+    private readonly string _clientUrl;
     private readonly string _unsubInfo;
     private readonly string _bestWishesInfo;
     private readonly string _userGreetings;
@@ -26,6 +27,7 @@ public class DefaultSmtpSender : ISmtpSender
     {
         _logger = logger;
         _smtpOptions = smtpOptions?.Value ?? throw new ArgumentNullException(nameof(smtpOptions));
+        _clientUrl = configuration.GetValue<string>("ClientUrl");
         _unsubInfo = configuration.GetValue<string>("UnsubInfo");
         _bestWishesInfo = configuration.GetValue<string>("BestWishesInfo");
         _userGreetings = configuration.GetValue<string>("UserGreetings");
@@ -69,7 +71,7 @@ public class DefaultSmtpSender : ISmtpSender
         sb.AppendLine("\n");
         sb.AppendLine(content);
         sb.AppendLine(_bestWishesInfo);
-        sb.AppendFormat(_unsubInfo, userId);
+        sb.AppendFormat(_unsubInfo, _clientUrl, userId);
         return sb.ToString();
     }
 

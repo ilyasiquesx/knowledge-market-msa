@@ -18,8 +18,6 @@
 
     <ItemGroup>
       <Folder Include="Data\Configuration" />
-      <Folder Include="Migrations" />
-      <Folder Include="Options" />
     </ItemGroup>
 
     <ItemGroup>

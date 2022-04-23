@@ -13,6 +13,7 @@ interface Question {
     author: User,
     id: number,
     createdAt: string,
+    updatedAt: string,
     answersCount: number
 }
 
@@ -77,6 +78,7 @@ const ForumComponent: FC<{}> = () => {
                         <Box m="5px">
                             <Typography align="right">Created by: {question?.author.username}</Typography>
                             <Typography align="right">Created at: {question?.createdAt}</Typography>
+                            <Typography align="right">Updated at: {question?.updatedAt}</Typography>
                         </Box>
                     </Grid>
                 </Grid>

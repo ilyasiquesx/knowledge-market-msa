@@ -57,8 +57,7 @@ services:
     container_name: maildev
     image: maildev/maildev
     ports:
-      - "1080:80"
-      - "1025:25"
+      - "8080:1080"
     networks:
       - knowledge-market-network
   
@@ -70,7 +69,7 @@ services:
         - GATEWAY_URL=${GATEWAY_URL}:${GATEWAY_PORT}
     container_name: forum-client
     ports:
-      - "3080:80"
+      - "${REACT_CLIENT_PORT}:80"
   
   gateway:
     container_name: gateway
@@ -145,6 +144,9 @@ services:
       - RabbitHandler__ExchangeName=${EXCHANGE_NAME}
       - JwtOptions__SecurityKey=${JWT_SECURITY_KEY}
       - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
+      - SmtpOptions__Host=maildev
+      - SmtpOptions__Port=1025
+      - ClientUrl=${REACT_CLIENT_URL}:${REACT_CLIENT_PORT}
     networks:
       - knowledge-market-network
     depends_on:
@@ -166,6 +168,7 @@ services:
       - RabbitHandler__ExchangeName=${EXCHANGE_NAME}
       - JwtOptions__SecurityKey=${JWT_SECURITY_KEY}
       - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
+      - ClientUrl=${REACT_CLIENT_URL}:${REACT_CLIENT_PORT}
     networks:
       - knowledge-market-network
     depends_on:

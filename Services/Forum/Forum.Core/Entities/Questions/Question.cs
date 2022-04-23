@@ -14,4 +14,6 @@ public class Question
     public long? BestAnswerId { get; set; }
     public Answer BestAnswer { get; set; }
     public DateTime CreatedAt { get; set; }
+    
+    public DateTime UpdatedAt { get; set; }
 }

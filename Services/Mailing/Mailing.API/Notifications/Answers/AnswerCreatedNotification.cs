@@ -18,6 +18,7 @@ public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotificati
     private readonly IMessageBuilder _messageBuilder;
     private readonly ISmtpSender _smtpSender;
     private readonly string _questionLinkTemplate;
+    private readonly string _clientUrl;
 
     public AnswerCreatedHandler(MailingContext context,
         IMessageBuilderProvider builderProvider,
@@ -27,6 +28,7 @@ public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotificati
         _messageBuilder = builderProvider.GetByType("AnswerCreated");
         _smtpSender = smtpSender;
         _questionLinkTemplate = configuration.GetValue<string>("QuestionLinkTemplate");
+        _clientUrl = configuration.GetValue<string>("ClientUrl");
     }
 
     public async Task Handle(AnswerCreatedNotification notification, CancellationToken cancellationToken)
@@ -50,7 +52,7 @@ public class AnswerCreatedHandler : INotificationHandler<AnswerCreatedNotificati
             var customParams = new Dictionary<string, object>();
             customParams.TryAdd("question", question);
             customParams.TryAdd("commentAuthor", commentAuthor);
-            customParams.TryAdd("questionLink", string.Format(_questionLinkTemplate, question.Id));
+            customParams.TryAdd("questionLink", string.Format(_questionLinkTemplate, _clientUrl, question.Id));
             var messageDetails = _messageBuilder.BuildMessage(customParams);
             _smtpSender.Send(question.Author.Id, question.Author.Username, question.Author.Email, messageDetails.Subject,
                 messageDetails.Content);
