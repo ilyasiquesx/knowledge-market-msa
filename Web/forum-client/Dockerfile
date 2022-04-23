@@ -10,7 +10,7 @@ COPY ./Web/forum-client/public ./public/
 COPY ./Web/forum-client/src ./src/
 
 RUN REACT_APP_GATEWAY_URL=${GATEWAY_URL} \
-  npm run build 
+  npm run build
 
 FROM nginx:1.17-alpine
 COPY --from=build /app/build /usr/share/nginx/html
