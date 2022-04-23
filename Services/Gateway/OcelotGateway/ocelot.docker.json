@@ -32,7 +32,7 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/mailing",
+      "DownstreamPathTemplate": "/mailing/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -40,7 +40,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/mailing/",
+      "UpstreamPathTemplate": "/mailing/{everything}",
       "UpstreamHttpMethod": [
         "Get",
         "Put",
@@ -59,7 +59,8 @@
       ],
       "UpstreamPathTemplate": "/notifications/",
       "UpstreamHttpMethod": [
-        "Get"
+        "Get",
+        "Put"
       ]
     }
   ]

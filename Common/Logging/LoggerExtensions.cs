@@ -12,8 +12,9 @@ public static class LoggerExtensions
     public static IServiceCollection AddSerilog(this IServiceCollection services, IConfiguration configuration,
         IWebHostEnvironment environment)
     {
+        var elasticEndpoint = configuration.GetValue<string>("ElasticSearchUrl");
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticEndpoint))
             {
                 IndexFormat = $"{Assembly.GetEntryAssembly()?.GetName().Name}-{environment.EnvironmentName}",
             })

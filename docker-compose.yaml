@@ -46,7 +46,7 @@ services:
     container_name: rabbitmq-server
     image: rabbitmq:3-management
     ports:
-      - "15675:15672"
+      - "15672:15672"
       - "5672:5672"
     networks:
       - knowledge-market-network
@@ -62,17 +62,31 @@ services:
     networks:
       - knowledge-market-network
   
+  forum-client:
+    build:
+      context: .
+      dockerfile: Web/forum-client/Dockerfile
+      args:
+        - GATEWAY_URL=${GATEWAY_URL}:${GATEWAY_PORT}
+    container_name: forum-client
+    ports:
+      - "3080:80"
+  
   gateway:
     container_name: gateway
     build:
       context: .
       dockerfile: Services/Gateway/OcelotGateway/Dockerfile
     depends_on:
-      - db
+      - forum-service
+      - auth-service
+      - notify-service
+      - mail-service
     ports:
-      - "4900:80"
+      - ${GATEWAY_PORT}:80
     environment:
       - IsInDocker=true
+      - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
     networks:
       - knowledge-market-network
   
@@ -83,9 +97,75 @@ services:
       context: .
       dockerfile: Services/Authentication/Authentication.API/Dockerfile
     environment:
-      - ConnectionStrings__AuthStorage=Host=db;Port=5432;Database=AuthenticationStorage;Username=postgres;Password=developer1995
+      - ConnectionStrings__AuthStorage=Host=db;Port=5432;Database=AuthenticationStorage;Username=postgres;Password=${DB_PASSWORD}
       - RabbitConnection__Hostname=rabbitmq
       - RabbitConnection__Port=5672
+      - RabbitPublisher__ExchangeName=${EXCHANGE_NAME}
+      - JwtOptions__SecurityKey=${JWT_SECURITY_KEY}
+      - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
+    networks:
+      - knowledge-market-network
+    depends_on:
+      - db
+      - rabbitmq
+      - elasticsearch
+  
+  forum-service:
+    container_name: forum-service
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Services/Forum/Forum.API/Dockerfile
+    environment:
+      - ConnectionStrings__ForumStorage=Host=db;Port=5432;Database=ForumStorage;Username=postgres;Password=${DB_PASSWORD}
+      - RabbitConnection__Hostname=rabbitmq
+      - RabbitConnection__Port=5672
+      - RabbitPublisher__ExchangeName=${EXCHANGE_NAME}
+      - RabbitHandler__ExchangeName=${EXCHANGE_NAME}
+      - JwtOptions__SecurityKey=${JWT_SECURITY_KEY}
+      - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
+    networks:
+      - knowledge-market-network
+    depends_on:
+      - db
+      - rabbitmq
+      - elasticsearch
+  
+  mail-service:
+    container_name: mail-service
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Services/Mailing/Mailing.API/Dockerfile
+    environment:
+      - ConnectionStrings__MailingStorage=Host=db;Port=5432;Database=MailingStorage;Username=postgres;Password=${DB_PASSWORD}
+      - RabbitConnection__Hostname=rabbitmq
+      - RabbitConnection__Port=5672
+      - RabbitPublisher__ExchangeName=${EXCHANGE_NAME}
+      - RabbitHandler__ExchangeName=${EXCHANGE_NAME}
+      - JwtOptions__SecurityKey=${JWT_SECURITY_KEY}
+      - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
+    networks:
+      - knowledge-market-network
+    depends_on:
+      - db
+      - rabbitmq
+      - elasticsearch
+  
+  notify-service:
+    container_name: notify-service
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Services/Notifications/Notifications.API/Dockerfile
+    environment:
+      - ConnectionStrings__NotificationStorage=Host=db;Port=5432;Database=NotificationStorage;Username=postgres;Password=${DB_PASSWORD}
+      - RabbitConnection__Hostname=rabbitmq
+      - RabbitConnection__Port=5672
+      - RabbitPublisher__ExchangeName=${EXCHANGE_NAME}
+      - RabbitHandler__ExchangeName=${EXCHANGE_NAME}
+      - JwtOptions__SecurityKey=${JWT_SECURITY_KEY}
+      - ElasticSearchUrl=${ELASTIC_SEARCH_URL}
     networks:
       - knowledge-market-network
     depends_on:
