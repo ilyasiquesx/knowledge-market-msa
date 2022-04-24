@@ -37,7 +37,7 @@ const RegisterComponent: FC = () => {
             .then((r) => {
                 if (r?.status == 200) {
                     setUserRequest(emptyRequest)
-                    toast("Successful register");
+                    toast("Successful registration");
                 }
             });
     }
