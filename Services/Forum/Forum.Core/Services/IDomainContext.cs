@@ -1,5 +1,4 @@
-﻿using Forum.Core.Entities;
-using Forum.Core.Entities.Answers;
+﻿using Forum.Core.Entities.Answers;
 using Forum.Core.Entities.Questions;
 using Forum.Core.Entities.Users;
 using Microsoft.EntityFrameworkCore;

@@ -47,7 +47,7 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
         if (bestAnswer != null)
         {
             answers = answers.Where(a => a.Id != bestAnswer.Id).ToList();
-            bestAnswerDto = Builders.Answers.BuildAnswerDto(bestAnswer, requestedBy);
+            bestAnswerDto = DtoBuilders.Answers.BuildAnswerDto(bestAnswer, requestedBy);
         }
 
         var dto = new QuestionDto
@@ -55,8 +55,8 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
             Id = question.Id,
             Title = question.Title,
             Content = question.Content,
-            Author = Builders.Users.BuildAuthorDto(author),
-            Answers = Builders.Answers.BuildAnswersDto(answers, requestedBy),
+            Author = DtoBuilders.Users.BuildAuthorDto(author),
+            Answers = DtoBuilders.Answers.BuildAnswersDto(answers, requestedBy),
             BestAnswer = bestAnswerDto,
             CreatedAt = question.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),
             UpdatedAt = question.UpdatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm"),

@@ -47,7 +47,6 @@ public class AccountController : ApiController
             model.IsSubscribedForMailing,
             user.Email
         });
-        
 
         return Ok();
     }

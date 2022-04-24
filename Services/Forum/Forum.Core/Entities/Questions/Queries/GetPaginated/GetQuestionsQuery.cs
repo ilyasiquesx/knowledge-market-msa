@@ -46,14 +46,13 @@ public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, Quest
         var questions = await _domainContext.Questions
             .Include(q => q.BestAnswer)
             .Include(q => q.Answers)
-            .ThenInclude(a => a.Author)
             .Include(q => q.Author)
             .OrderByDescending(q => q.UpdatedAt)
             .ThenByDescending(q => q.CreatedAt)
             .Skip(pagination.PageSize * (pagination.Page - 1))
             .Take(pagination.PageSize).ToListAsync(cancellationToken);
 
-        var questionsDto = questions.Select(Builders.Questions.BuildQuestionDto);
+        var questionsDto = questions.Select(DtoBuilders.Questions.BuildQuestionDto);
         return new QuestionsDto
         {
             Questions = questionsDto,

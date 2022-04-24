@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\Configuration" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\..\Common\RabbitMqEventBus\RabbitMqEventBus.csproj" />
       <ProjectReference Include="..\Forum.Core\Forum.Core.csproj" />
     </ItemGroup>

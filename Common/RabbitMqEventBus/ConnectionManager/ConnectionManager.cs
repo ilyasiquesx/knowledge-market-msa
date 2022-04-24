@@ -69,7 +69,7 @@ internal sealed class ConnectionManager : IConnectionManager
 
     private void ConnectionOnConnectionShutdown(object sender, ShutdownEventArgs e)
     {
-        _logger.LogWarning("{Message} {@EventArgs}", "Shutdown connection. Reconnecting...", e);
+        _logger.LogWarning("{Message} {@EventArgs}", "Connection is shut down", e);
     }
 
     private void ConnectionOnCallbackException(object sender, CallbackExceptionEventArgs e)
@@ -91,7 +91,7 @@ internal sealed class ConnectionManager : IConnectionManager
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while disposing connection pool");
+            _logger.LogError(e, "Error while disposing connection manager");
         }
 
         _connection?.Close();

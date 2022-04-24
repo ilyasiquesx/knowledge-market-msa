@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Notifications.API.Data;
-using Notifications.API.Dto;
 
 namespace Notifications.API.MediatrNotifications.Users;
 

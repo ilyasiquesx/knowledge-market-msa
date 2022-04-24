@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace RabbitMqEventBus.HandlerManager;
+﻿namespace RabbitMqEventBus.HandlerManager;
 
 public interface IHandlerManager
 {

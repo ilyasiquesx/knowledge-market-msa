@@ -6,5 +6,4 @@ namespace Authentication.API.Controllers;
 [Route("[controller]")]
 public class ApiController : ControllerBase
 {
-    
 }

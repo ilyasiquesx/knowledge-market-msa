@@ -7,7 +7,7 @@ using Forum.Core.Entities.Users;
 
 namespace Forum.Core.Entities;
 
-public static class Builders
+public static class DtoBuilders
 {
     public static class Answers
     {

@@ -5,7 +5,7 @@ public class UnhandledExceptionHandlerMiddleware
     private readonly RequestDelegate _next;
     private readonly ILogger<UnhandledExceptionHandlerMiddleware> _logger;
 
-    public UnhandledExceptionHandlerMiddleware(RequestDelegate next, 
+    public UnhandledExceptionHandlerMiddleware(RequestDelegate next,
         ILogger<UnhandledExceptionHandlerMiddleware> logger)
     {
         _next = next;
@@ -14,7 +14,6 @@ public class UnhandledExceptionHandlerMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        var logger = context.Request.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
         try
         {
             await _next(context);
@@ -23,8 +22,8 @@ public class UnhandledExceptionHandlerMiddleware
         {
             if (context.Response.HasStarted)
                 return;
-        
-            logger.LogError(e, "Global exception handling");
+
+            _logger.LogError(e, "Global exception handling");
             context.Response.StatusCode = 500;
             await context.Response.WriteAsJsonAsync(new
             {

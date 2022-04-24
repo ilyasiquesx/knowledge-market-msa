@@ -12,18 +12,18 @@ public interface ISmtpSender
     public void Send(string userId, string username, string email, string subject, string content);
 }
 
-public class DefaultSmtpSender : ISmtpSender
+public class MailDevSmtpSender : ISmtpSender
 {
     private readonly SmtpOptions _smtpOptions;
     private readonly string _clientUrl;
     private readonly string _unsubInfo;
     private readonly string _bestWishesInfo;
     private readonly string _userGreetings;
-    private readonly ILogger<DefaultSmtpSender> _logger;
+    private readonly ILogger<MailDevSmtpSender> _logger;
 
-    public DefaultSmtpSender(IOptions<SmtpOptions> smtpOptions,
+    public MailDevSmtpSender(IOptions<SmtpOptions> smtpOptions,
         IConfiguration configuration,
-        ILogger<DefaultSmtpSender> logger)
+        ILogger<MailDevSmtpSender> logger)
     {
         _logger = logger;
         _smtpOptions = smtpOptions?.Value ?? throw new ArgumentNullException(nameof(smtpOptions));
@@ -35,7 +35,7 @@ public class DefaultSmtpSender : ISmtpSender
 
     public void Send(string userId, string username, string email, string subject, string content)
     {
-        if (!IsInputValid(username, email, subject, content))
+        if (!IsInputValid(userId, username, email, subject, content))
             return;
 
         try
@@ -75,9 +75,9 @@ public class DefaultSmtpSender : ISmtpSender
         return sb.ToString();
     }
 
-    private static bool IsInputValid(string username, string email, string subject, string content)
+    private static bool IsInputValid(string userId, string username, string email, string subject, string content)
     {
         return !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(subject) &&
-               !string.IsNullOrEmpty(content);
+               !string.IsNullOrEmpty(content) && !string.IsNullOrEmpty(userId);
     }
 }

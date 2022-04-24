@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ISmtpSender, DefaultSmtpSender>();
+builder.Services.AddSingleton<ISmtpSender, MailDevSmtpSender>();
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<MailingContext>(opt =>
 {
@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidIssuer = options.Issuer,
             ValidAudience = options.Audience,
-            IssuerSigningKey = options.GetSecurityKey()
+            IssuerSigningKey = options.GetSecurityKey(),
         };
     });
 
