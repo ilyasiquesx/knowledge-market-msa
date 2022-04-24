@@ -44,6 +44,7 @@ builder.Services.AddMessageHandler(builder.Configuration, "RabbitHandler");
 builder.Services.AddHandlerManager(opt =>
 {
     opt.AddNotificationForMessageType<CreateUserNotification>("UserCreated");
+    opt.AddNotificationForMessageType<SampleUserNotification>("SampleUser");
 });
 builder.Services.AddScoped<IDomainContext, ForumContext>();
 builder.Services.AddTransient<IIntegrationEventService, IntegrationEventService>();
