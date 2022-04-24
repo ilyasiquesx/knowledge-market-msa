@@ -12,7 +12,7 @@ export interface UpdateQuestionRequest {
     bestAnswerId?: number
 }
 
-const UpdateQuestionComponent: FC<{}> = () => {
+const UpdateQuestionComponent: FC = () => {
 
     const [updateQuestionRequest, setUpdateQuestionRequest] = useState<UpdateQuestionRequest>({
         title: '',

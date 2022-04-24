@@ -10,7 +10,7 @@ interface Notification {
     createdAt: string
 }
 
-const NotificationsComponent: FC<{}> = () => {
+const NotificationsComponent: FC = () => {
 
     const [notifications, setNotification] = useState<Notification[]>([]);
 

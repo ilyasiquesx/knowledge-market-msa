@@ -34,8 +34,7 @@ interface Answer {
     availableToEdit: boolean,
 }
 
-
-const QuestionComponent: FC<{}> = () => {
+const QuestionComponent: FC = () => {
     const {id} = useParams();
     const [question, setQuestion] = useState<Question>();
     const [answers, setAnswers] = useState<Answer[]>([]);
@@ -68,7 +67,7 @@ const QuestionComponent: FC<{}> = () => {
         postAnswer({
             content: replyField,
             questionId: question?.id
-        }).then(r => {
+        }).then(() => {
             getQuestion(question?.id.toString() as string);
             setReplyField('');
         })
@@ -127,7 +126,8 @@ const QuestionComponent: FC<{}> = () => {
                         }}>Mark as best</Button>}
                 </Box>}
                 {answer?.availableToEdit && <Box>
-                    <Button size="small" onClick={() => onEditAnswerClickHandler(answer?.id.toString())} variant="contained" sx={{
+                    <Button size="small" onClick={() => onEditAnswerClickHandler(answer?.id.toString())}
+                            variant="contained" sx={{
                         margin: '5px'
                     }}>Edit</Button>
                     <Button size="small" onClick={() => onDeleteAnswerClickHandler(answer?.id.toString())}

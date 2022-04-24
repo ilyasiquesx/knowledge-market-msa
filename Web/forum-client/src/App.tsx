@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
 import ForumComponent from "./components/forum/ForumComponent";
 import AccountComponent from "./components/account/AccountComponent";
-import {getUser, User} from "./components/UserService";
 import NavbarComponent from "./components/NavbarComponent";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import QuestionComponent from "./components/question/QuestionComponent";

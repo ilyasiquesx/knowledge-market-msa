@@ -28,12 +28,12 @@ interface Pagination {
 }
 
 
-const ForumComponent: FC<{}> = () => {
+const ForumComponent: FC = () => {
 
     const [questions, setQuestions] = useState<Question[]>([]);
     const [pagesCount, setPagesCount] = useState<number>(0);
     const [fetchError, setFetchError] = useState<boolean>(false);
-    const [paginationRequest, setPaginationRequest] = useState<Pagination>({
+    const [paginationRequest] = useState<Pagination>({
         pageSize: 6,
         page: 1
     })
@@ -51,7 +51,7 @@ const ForumComponent: FC<{}> = () => {
         }), 'fetch-service').then(r => {
             setQuestions(r.data?.questions);
             setPagesCount(r.data?.pageCount);
-        }).catch(er => setFetchError(true));
+        }).catch(() => setFetchError(true));
     }
 
     function BuildTopic(question: Question) {

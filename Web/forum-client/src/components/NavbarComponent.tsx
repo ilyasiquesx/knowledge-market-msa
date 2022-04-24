@@ -23,7 +23,7 @@ interface Content {
     questionTitle: string
 }
 
-const NavbarComponent: FC<{}> = () => {
+const NavbarComponent: FC = () => {
     const navigate = useNavigate();
     const [notifications, setNotification] = useState<Notification[]>([]);
 

@@ -12,7 +12,7 @@ interface CreateQuestionRequest {
     content: string,
 }
 
-const CreateQuestionComponent: FC<{}> = () => {
+const CreateQuestionComponent: FC = () => {
 
     const [createRequest, setQuestionRequest] = useState<CreateQuestionRequest>({
         title: '',

@@ -4,7 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {putMailing} from "../ApiService";
 import {toast} from "react-toastify";
 
-const UnsubscribeComponent: FC<{}> = () => {
+const UnsubscribeComponent: FC = () => {
     const {userId} = useParams();
     const navigate = useNavigate();
 

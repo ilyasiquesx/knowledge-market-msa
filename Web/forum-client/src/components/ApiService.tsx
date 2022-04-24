@@ -6,8 +6,6 @@ const instance = axios.create({
     baseURL:  process.env.REACT_APP_GATEWAY_URL
 });
 
-const baseUrl = process.env.REACT_APP_GATEWAY_URL;
-
 instance.interceptors.response.use((r => {
     return r;
 }), er => {
@@ -30,7 +28,6 @@ instance.interceptors.request.use((r) => {
 
     return r;
 });
-
 
 export function registerApi(body: any) {
     return instance.post(`/auth/Register`, body)

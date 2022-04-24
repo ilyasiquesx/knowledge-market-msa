@@ -4,7 +4,7 @@ import {FC} from "react";
 import {LinearProgress} from "@mui/material";
 import {usePromiseTracker} from "react-promise-tracker";
 
-const ProgressComponent: FC<{}> = () => {
+const ProgressComponent: FC = () => {
     const {promiseInProgress} = usePromiseTracker({area: 'fetch-service'});
     return (<Box>
         {promiseInProgress ? <Box sx={{

@@ -10,7 +10,7 @@ export interface EditAnswerRequest {
     content: string,
 }
 
-const EditAnswerComponent: FC<{}> = () => {
+const EditAnswerComponent: FC = () => {
 
     const [editAnswerRequest, setEditAnswerRequest] = useState<EditAnswerRequest>({
         content: '',

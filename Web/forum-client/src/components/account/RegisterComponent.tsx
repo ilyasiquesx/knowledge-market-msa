@@ -7,6 +7,7 @@ import {registerApi} from "../ApiService";
 import Typography from "@mui/material/Typography";
 import ProgressComponent from "../ProgressComponent";
 import {trackPromise} from "react-promise-tracker";
+import {toast} from "react-toastify";
 
 interface RegisterRequest {
     username: string,
@@ -24,7 +25,7 @@ const emptyRequest = {
     isSubscribedForMailing: true
 }
 
-const RegisterComponent: FC<{}> = () => {
+const RegisterComponent: FC = () => {
     const [userRequest, setUserRequest] = useState<RegisterRequest>(emptyRequest);
 
     function onFieldChange(field: string, value: any) {
@@ -36,6 +37,7 @@ const RegisterComponent: FC<{}> = () => {
             .then((r) => {
                 if (r?.status == 200) {
                     setUserRequest(emptyRequest)
+                    toast("Successful register");
                 }
             });
     }

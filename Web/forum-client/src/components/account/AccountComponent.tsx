@@ -5,7 +5,7 @@ import RegisterComponent from "./RegisterComponent";
 import {isAuthenticated} from "../UserService";
 
 
-const AccountComponent: FC<{}> = () => {
+const AccountComponent: FC = () => {
     const [currentForm, setCurrentFrom] = useState(<LoginComponent/>);
 
     useEffect(() => {

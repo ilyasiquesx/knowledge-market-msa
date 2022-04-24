@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {FC, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {setUser, User} from "../UserService";
 import {FormControl, TextField} from "@mui/material";
 import {loginApi} from "../ApiService";
@@ -20,7 +19,7 @@ const emptyLoginRequest = {
     password: '',
 }
 
-const LoginComponent: FC<{}> = () => {
+const LoginComponent: FC = () => {
     const [loginRequest, setLoginRequest] = useState<LoginRequest>(emptyLoginRequest);
 
     function onLoginClickHandler() {
