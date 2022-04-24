@@ -109,7 +109,7 @@ const ForumComponent: FC = () => {
             {fetchError
                 ? <Typography align="center" mt="10px" variant="h4">Something went wrong. Sorry.</Typography>
                 : questions?.length < 1 &&
-                <Typography align="center" mt="10px" variant="h4">There are no questions yes. You can ask
+                <Typography align="center" mt="10px" variant="h4">There are no questions yet. You can ask
                     one.</Typography>}
 
             {questions?.length > 0 && <Grid container alignItems="center" justifyContent="center">
