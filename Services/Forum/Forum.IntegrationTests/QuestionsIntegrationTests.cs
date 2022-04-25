@@ -40,5 +40,6 @@ public class QuestionsIntegrationTests
 
         var response = await client.PostAsJsonAsync("/questions", createQuestionCommand);
         Assert.Equal(StatusCodes.Status200OK, (int)response.StatusCode);
+        Assert.False(true);
     }
 }
