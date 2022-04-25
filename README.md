@@ -1,3 +1,5 @@
+[![Build and Test](https://github.com/ilyasiquesx/knowledge-market-msa/actions/workflows/BuildAndTest.yml/badge.svg)](https://github.com/ilyasiquesx/knowledge-market-msa/actions/workflows/BuildAndTest.yml)
+
 # Knowledge market system
 
 Using this service you can ask questions, give answers, set answers as best for the question.
