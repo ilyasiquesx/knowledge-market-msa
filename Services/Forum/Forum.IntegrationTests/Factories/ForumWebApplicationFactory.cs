@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using Forum.API;
 using Forum.API.Options;
 using Forum.Core.Entities.Questions;
 using Forum.Core.Entities.Users;
 using Forum.Infrastructure.Data;
+using Forum.IntegrationTests.Mocks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -19,7 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using RabbitMqEventBus.MessageHandler;
 using RabbitMqEventBus.MessagePublisher;
 
-namespace Forum.IntegrationTests;
+namespace Forum.IntegrationTests.Factories;
 
 public class ForumWebApplicationFactory : WebApplicationFactory<Program>
 {

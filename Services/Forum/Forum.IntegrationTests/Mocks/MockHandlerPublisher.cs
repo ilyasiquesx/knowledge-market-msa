@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using RabbitMqEventBus.MessageHandler;
 using RabbitMqEventBus.MessagePublisher;
 
-namespace Forum.IntegrationTests;
+namespace Forum.IntegrationTests.Mocks;
 
 public class MockHandlerPublisher : IMessageHandler, IMessagePublisher
 {
