@@ -12,7 +12,7 @@ const AccountComponent: FC = () => {
         if (isAuthenticated()) {
             window.location.assign("/");
         }
-    }, [])
+    })
 
     function setLogin() {
         setCurrentFrom(<LoginComponent/>)

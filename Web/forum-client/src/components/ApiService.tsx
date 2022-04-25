@@ -9,7 +9,7 @@ const instance = axios.create({
 instance.interceptors.response.use((r => {
     return r;
 }), er => {
-    if (er.response.status == 401) {
+    if (er.response.status === 401) {
         clearUser();
         window.location.assign("/auth");
     }

@@ -35,7 +35,7 @@ const RegisterComponent: FC = () => {
     function onRegisterClickHandler() {
         trackPromise(registerApi(userRequest), 'fetch-service')
             .then((r) => {
-                if (r?.status == 200) {
+                if (r?.status === 200) {
                     setUserRequest(emptyRequest)
                     toast("Successful registration");
                 }

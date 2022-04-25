@@ -43,7 +43,7 @@ const ForumComponent: FC = () => {
 
     useEffect(() => {
         questionsUpdate(paginationRequest)
-    }, [])
+    })
 
     function questionsUpdate(pagination: any) {
         trackPromise(getQuestions({

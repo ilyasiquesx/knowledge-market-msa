@@ -16,7 +16,7 @@ const NotificationsComponent: FC = () => {
 
     useEffect(() => {
         setNotifications();
-    }, [])
+    })
 
     function renderNotification(item: Notification) {
         return (<Box sx={{

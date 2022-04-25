@@ -45,7 +45,7 @@ const UpdateQuestionComponent: FC = () => {
         }).catch(() => {
             navigate("/");
         })
-    }, [])
+    })
 
     function onFieldChange(field: string, value: any) {
         setUpdateQuestionRequest({...updateQuestionRequest, [field]: value} as UpdateQuestionRequest);
@@ -54,7 +54,7 @@ const UpdateQuestionComponent: FC = () => {
     function onUpdateQuestionHandler() {
         putQuestion(id as string, updateQuestionRequest)
             .then((r) => {
-                if (r.status == 204) {
+                if (r.status === 204) {
                     navigate(`/question/${id}`);
                 }
             })

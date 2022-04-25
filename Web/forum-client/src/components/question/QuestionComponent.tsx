@@ -44,7 +44,7 @@ const QuestionComponent: FC = () => {
 
     useEffect(() => {
         getQuestion(id as string)
-    }, [])
+    })
 
     function getQuestion(id: string) {
         trackPromise(getQuestionById(id), 'fetch-service')
@@ -59,7 +59,7 @@ const QuestionComponent: FC = () => {
     function onUpdateQuestion(body: any) {
         putQuestion(id as string, body)
             .then((r) => {
-                if (r.status == 204) {
+                if (r.status === 204) {
                     getQuestion(id as string);
                 }
             });
@@ -70,7 +70,7 @@ const QuestionComponent: FC = () => {
             content: replyField,
             questionId: question?.id
         }).then((r) => {
-            if (r.status == 200) {
+            if (r.status === 200) {
                 getQuestion(question?.id.toString() as string);
                 setReplyField('');
             }
@@ -79,7 +79,7 @@ const QuestionComponent: FC = () => {
 
     function onDeleteClickHandler() {
         deleteQuestion(id as string).then((r) => {
-            if (r.status == 200) {
+            if (r.status === 200) {
                 navigate('/');
             }
         })
@@ -95,7 +95,7 @@ const QuestionComponent: FC = () => {
 
     function onDeleteAnswerClickHandler(answerId: string) {
         deleteAnswer(answerId as string).then((r) => {
-            if (r.status == 200) {
+            if (r.status === 200) {
                 getQuestion(id as string);
             }
         })

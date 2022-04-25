@@ -37,7 +37,7 @@ const EditAnswerComponent: FC = () => {
         }).catch(() => {
             navigate("/");
         })
-    }, [])
+    })
 
     function onFieldChange(field: string, value: any) {
         setEditAnswerRequest({...editAnswerRequest, [field]: value} as EditAnswerRequest);
@@ -46,7 +46,7 @@ const EditAnswerComponent: FC = () => {
     function onUpdateAnswer() {
         putAnswer(id as string, editAnswerRequest)
             .then((r) => {
-                if (r.status == 204) {
+                if (r.status === 204) {
                     navigate(`/question/${questionId}`);
                 }
             })

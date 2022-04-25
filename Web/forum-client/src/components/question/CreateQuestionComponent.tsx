@@ -28,7 +28,7 @@ const CreateQuestionComponent: FC = () => {
     function onCreateQuestionHandler() {
         trackPromise(postQuestion(createRequest), 'fetch-service')
             .then((r) => {
-                if (r.status == 200) {
+                if (r.status === 200) {
                     navigate('/');
                 }
             })
