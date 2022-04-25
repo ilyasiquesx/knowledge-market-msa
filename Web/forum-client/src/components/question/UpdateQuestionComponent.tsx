@@ -53,8 +53,10 @@ const UpdateQuestionComponent: FC = () => {
 
     function onUpdateQuestionHandler() {
         putQuestion(id as string, updateQuestionRequest)
-            .then(() => {
-                navigate(`/question/${id}`);
+            .then((r) => {
+                if (r.status == 204) {
+                    navigate(`/question/${id}`);
+                }
             })
     }
 

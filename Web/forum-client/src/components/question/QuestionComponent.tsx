@@ -58,8 +58,10 @@ const QuestionComponent: FC = () => {
 
     function onUpdateQuestion(body: any) {
         putQuestion(id as string, body)
-            .then(() => {
-                getQuestion(id as string);
+            .then((r) => {
+                if (r.status == 204) {
+                    getQuestion(id as string);
+                }
             });
     }
 
@@ -67,15 +69,19 @@ const QuestionComponent: FC = () => {
         postAnswer({
             content: replyField,
             questionId: question?.id
-        }).then(() => {
-            getQuestion(question?.id.toString() as string);
-            setReplyField('');
+        }).then((r) => {
+            if (r.status == 200) {
+                getQuestion(question?.id.toString() as string);
+                setReplyField('');
+            }
         })
     }
 
     function onDeleteClickHandler() {
-        deleteQuestion(id as string).then(() => {
-            navigate('/');
+        deleteQuestion(id as string).then((r) => {
+            if (r.status == 200) {
+                navigate('/');
+            }
         })
     }
 
@@ -88,8 +94,10 @@ const QuestionComponent: FC = () => {
     }
 
     function onDeleteAnswerClickHandler(answerId: string) {
-        deleteAnswer(answerId as string).then(() => {
-            getQuestion(id as string)
+        deleteAnswer(answerId as string).then((r) => {
+            if (r.status == 200) {
+                getQuestion(id as string);
+            }
         })
     }
 
@@ -155,7 +163,7 @@ const QuestionComponent: FC = () => {
                         padding: '20px',
                         borderTop: '1px solid black',
                     }}>
-                        <Typography mx="20px" fontSize="1.2em">{question?.content}</Typography>
+                        <Typography mx="20px" fontSize="1em">{question?.content}</Typography>
                     </Box>
                     <Typography mx="20px" fontSize="0.8em">Asked
                         by: {question?.author?.username}</Typography>

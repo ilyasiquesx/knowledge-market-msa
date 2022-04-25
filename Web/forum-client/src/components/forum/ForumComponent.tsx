@@ -7,6 +7,7 @@ import {getQuestions} from "../ApiService";
 import Button from "@mui/material/Button";
 import ProgressComponent from "../ProgressComponent";
 import {trackPromise} from "react-promise-tracker";
+import {isAuthenticated} from "../UserService";
 
 interface Question {
     title: string,
@@ -54,6 +55,15 @@ const ForumComponent: FC = () => {
         }).catch(() => setFetchError(true));
     }
 
+    function onAskQuestionClickHandler()
+    {
+        if (isAuthenticated()) {
+            navigate("/question/create")
+        } else {
+            navigate("/auth")
+        }
+    }
+
     function BuildTopic(question: Question) {
         return (
             <Grid item>
@@ -99,9 +109,7 @@ const ForumComponent: FC = () => {
                 </Grid>
                 <Grid item>
                     <Box>
-                        <Button variant="contained" sx={{margin: '5px'}} onClick={() => {
-                            navigate("/question/create");
-                        }}>Ask a question</Button>
+                        <Button variant="contained" sx={{margin: '5px'}} onClick={onAskQuestionClickHandler}>Ask a question</Button>
                     </Box>
                 </Grid>
             </Grid>
