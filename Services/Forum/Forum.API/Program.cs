@@ -78,5 +78,12 @@ async Task MigrateDb(IApplicationBuilder appBuilder)
 {
     using var scope = appBuilder.ApplicationServices.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ForumContext>();
-    await context?.Database?.MigrateAsync();
+    if (context.Database.IsRelational())
+    {
+        await context?.Database?.MigrateAsync();
+    }
+}
+
+public partial class Program
+{
 }
