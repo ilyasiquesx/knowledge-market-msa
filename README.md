@@ -32,7 +32,7 @@ There is an architecture diagram:
 I am neither full-stack nor front-end developer. The reason why i tried to develop a client application is to allow
 users to interact with whole system.
 
-##Inspired by:
+### Inspired by:
 * [Stackoverflow](https://stackoverflow.com/)
 * [PitStop](https://github.com/EdwinVW/pitstop)
 * [Clean Architecture](https://github.com/ardalis/CleanArchitecture)
