@@ -31,7 +31,7 @@ const NavbarComponent: FC = () => {
         if (isAuthenticated()) {
             trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r.data))
         }
-    })
+    }, [])
 
     function onLoginClickHandler() {
         if (isAuthenticated()) {

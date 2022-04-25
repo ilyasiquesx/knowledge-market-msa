@@ -42,8 +42,12 @@ const ForumComponent: FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        questionsUpdate(paginationRequest)
-    })
+        const questionUpdateInternal = () => {
+            questionsUpdate(paginationRequest)
+        }
+        
+        questionUpdateInternal();
+    }, [])
 
     function questionsUpdate(pagination: any) {
         trackPromise(getQuestions({

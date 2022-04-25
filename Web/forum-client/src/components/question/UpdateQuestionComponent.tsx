@@ -45,7 +45,7 @@ const UpdateQuestionComponent: FC = () => {
         }).catch(() => {
             navigate("/");
         })
-    })
+    }, [])
 
     function onFieldChange(field: string, value: any) {
         setUpdateQuestionRequest({...updateQuestionRequest, [field]: value} as UpdateQuestionRequest);

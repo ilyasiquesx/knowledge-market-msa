@@ -37,7 +37,7 @@ const EditAnswerComponent: FC = () => {
         }).catch(() => {
             navigate("/");
         })
-    })
+    }, [])
 
     function onFieldChange(field: string, value: any) {
         setEditAnswerRequest({...editAnswerRequest, [field]: value} as EditAnswerRequest);

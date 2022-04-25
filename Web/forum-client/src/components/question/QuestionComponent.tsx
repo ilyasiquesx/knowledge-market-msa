@@ -44,7 +44,7 @@ const QuestionComponent: FC = () => {
 
     useEffect(() => {
         getQuestion(id as string)
-    })
+    }, [])
 
     function getQuestion(id: string) {
         trackPromise(getQuestionById(id), 'fetch-service')
