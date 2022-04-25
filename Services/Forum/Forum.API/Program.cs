@@ -16,13 +16,14 @@ using RabbitMqEventBus.DependencyInjection;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ForumContext>(
     opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("ForumStorage")));
-builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddMediatR(assemblies);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
@@ -53,7 +54,7 @@ builder.Services.AddSingleton<IDateService, DateService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHostedService<MessageHandlerHostedService>();
 builder.Services.AddFluentValidation();
-builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddValidatorsFromAssemblies(assemblies);
 builder.Services.AddSerilog(builder.Configuration, builder.Environment);
 
 builder.WebHost.UseSerilog();
