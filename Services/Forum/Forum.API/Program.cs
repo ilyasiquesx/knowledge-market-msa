@@ -61,8 +61,8 @@ builder.WebHost.UseSerilog();
 
 var app = builder.Build();
 await MigrateDb(app);
-app.UseMiddleware<UnhandledExceptionHandlerMiddleware>();
 
+app.UseMiddleware<UnhandledExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -72,7 +72,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
 
 async Task MigrateDb(IApplicationBuilder appBuilder)
@@ -80,9 +79,7 @@ async Task MigrateDb(IApplicationBuilder appBuilder)
     using var scope = appBuilder.ApplicationServices.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ForumContext>();
     if (context.Database.IsRelational())
-    {
         await context?.Database?.MigrateAsync();
-    }
 }
 
 public partial class Program

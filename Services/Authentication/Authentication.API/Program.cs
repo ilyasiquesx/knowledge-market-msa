@@ -42,6 +42,7 @@ builder.WebHost.UseSerilog();
 var app = builder.Build();
 await MigrateDb(app);
 await SeedData(app);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -56,8 +57,8 @@ async Task MigrateDb(IApplicationBuilder appBuilder)
 {
     using var scope = appBuilder.ApplicationServices.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<AuthContext>();
-    if (context != null)
-        await context.Database?.MigrateAsync();
+    if (context?.Database != null && context.Database.IsRelational())
+        await context.Database.MigrateAsync();
 }
 
 async Task SeedData(IApplicationBuilder appBuilder)
@@ -68,7 +69,7 @@ async Task SeedData(IApplicationBuilder appBuilder)
     var userService = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     if (context != null && publisher != null && userService != null && !context.Users.Any())
     {
-        var user = new User()
+        var user = new User
         {
             UserName = "SampleUser",
             Email = "sample-sample@sample.com",

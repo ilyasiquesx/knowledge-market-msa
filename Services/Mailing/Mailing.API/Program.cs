@@ -1,4 +1,3 @@
-using System.Text;
 using Logging;
 using Mailing.API.BackgroundTasks;
 using Mailing.API.Data;
@@ -67,6 +66,7 @@ builder.WebHost.UseSerilog();
 
 var app = builder.Build();
 await MigrateDb(app);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -82,5 +82,6 @@ async Task MigrateDb(IApplicationBuilder appBuilder)
 {
     using var scope = appBuilder.ApplicationServices.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<MailingContext>();
-    await context?.Database?.MigrateAsync();
+    if (context?.Database != null && context.Database.IsRelational())
+        await context.Database.MigrateAsync();
 }

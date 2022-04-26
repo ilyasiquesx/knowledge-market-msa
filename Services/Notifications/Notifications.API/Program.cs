@@ -55,11 +55,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddSerilog(builder.Configuration, builder.Environment);
-
 builder.WebHost.UseSerilog();
 
 var app = builder.Build();
 await MigrateDb(app);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -75,5 +75,6 @@ async Task MigrateDb(IApplicationBuilder appBuilder)
 {
     using var scope = appBuilder.ApplicationServices.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-    await context?.Database?.MigrateAsync();
+    if (context?.Database != null && context.Database.IsRelational())
+        await context?.Database?.MigrateAsync();
 }
