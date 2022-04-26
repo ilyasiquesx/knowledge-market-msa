@@ -57,7 +57,6 @@ public static class RabbitMqExtensions
         var handlerOptions = new RabbitHandlerOptions();
         configuration.GetSection(sectionName).Bind(handlerOptions);
         serviceCollection.AddSingleton(handlerOptions);
-
         serviceCollection.AddSingleton<IMessageHandler, MessageHandler.MessageHandler>();
         return serviceCollection;
     }
@@ -74,7 +73,6 @@ public static class RabbitMqExtensions
         var handlerOptions = new RabbitHandlerOptions();
         configureOptions(handlerOptions);
         serviceCollection.AddSingleton(handlerOptions);
-
         serviceCollection.AddSingleton<IMessageHandler, MessageHandler.MessageHandler>();
         return serviceCollection;
     }
