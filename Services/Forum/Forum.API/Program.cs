@@ -1,6 +1,8 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Forum.API;
 using Forum.API.BackgroundTasks;
+using Forum.API.Filters;
 using Forum.API.Middlewares;
 using Forum.API.Options;
 using Forum.Core.Entities.Users.Notifications;
@@ -10,6 +12,7 @@ using Forum.Infrastructure.Services;
 using Logging;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RabbitMqEventBus.DependencyInjection;
@@ -18,7 +21,14 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt =>
+    {
+       opt.Filters.Add(typeof(ValidationFilter));
+        opt.Filters.Add(typeof(DomainExceptionFilterAttribute));
+    })
+    .AddFluentValidation();
+builder.Services.Configure<ApiBehaviorOptions>(opt => { opt.SuppressModelStateInvalidFilter = true; });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ForumContext>(
@@ -53,7 +63,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IDateService, DateService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHostedService<MessageHandlerHostedService>();
-builder.Services.AddFluentValidation();
 builder.Services.AddValidatorsFromAssemblies(assemblies);
 builder.Services.AddSerilog(builder.Configuration, builder.Environment);
 

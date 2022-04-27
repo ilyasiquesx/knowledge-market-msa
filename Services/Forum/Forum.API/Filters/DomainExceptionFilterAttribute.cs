@@ -1,22 +1,25 @@
 ﻿using Forum.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Forum.API.Filters;
 
-public class DomainExceptionFilterAttribute : Attribute, IAsyncExceptionFilter
+public class DomainExceptionFilterAttribute : IAsyncExceptionFilter
 {
-    public async Task OnExceptionAsync(ExceptionContext context)
+    public Task OnExceptionAsync(ExceptionContext context)
     {
-        if (context.Exception is DomainException de)
+        if (context.Exception is not DomainException de)
+            return Task.CompletedTask;
+
+        var logger =
+            context.HttpContext.RequestServices.GetRequiredService<ILogger<DomainExceptionFilterAttribute>>();
+        logger.LogWarning(de, "{Message}", "Domain exception is thrown");
+
+        context.Result = new BadRequestObjectResult(new
         {
-            var logger =
-                context.HttpContext.RequestServices.GetRequiredService<ILogger<DomainExceptionFilterAttribute>>();
-            logger.LogWarning(de, "{Message}", "Domain exception is thrown");
-            context.HttpContext.Response.StatusCode = 400;
-            await context.HttpContext.Response.WriteAsJsonAsync(new
-            {
-                de.Message
-            });
-        }
+            de.Message
+        });
+
+        return Task.CompletedTask;
     }
 }
