@@ -6,7 +6,7 @@ public class UpdateCommandValidator : AbstractValidator<UpdateQuestionCommand>
 {
     public UpdateCommandValidator()
     {
-        RuleFor(q => q.Title).NotEmpty().WithMessage("Title must exist");
-        RuleFor(q => q.Content).NotEmpty().WithMessage("Content must exist");
+        RuleFor(q => q.Title).NotEmpty().WithMessage("Question title must exist");
+        RuleFor(q => q.Content).NotEmpty().WithMessage("Question content must exist");
     }
 }
