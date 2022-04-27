@@ -14,14 +14,6 @@ public class GetQuestionsQuery : IRequest<QuestionsDto>
     }
 }
 
-public class Pagination
-{
-    public int Page { get; set; }
-    public int PageSize { get; set; }
-    public int MaxPageSize { get; set; } = int.MaxValue;
-    public int TotalCount { get; set; }
-}
-
 public class GetQuestionsQueryHandler : IRequestHandler<GetQuestionsQuery, QuestionsDto>
 {
     private readonly IDomainContext _domainContext;
