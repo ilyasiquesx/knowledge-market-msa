@@ -3,15 +3,25 @@ import {clearUser, getUser} from "./UserService";
 import {toast} from "react-toastify";
 
 const instance = axios.create({
-    baseURL:  process.env.REACT_APP_GATEWAY_URL
+    baseURL: process.env.REACT_APP_GATEWAY_URL
 });
 
 instance.interceptors.response.use((r => {
     return r;
 }), er => {
-    if (er.response.status === 401) {
+    if (er?.response?.status === 401) {
         clearUser();
         window.location.assign("/auth");
+        return er;
+    }
+
+    const validationErrors = er?.response?.data?.errors as string[]
+    if (validationErrors) {
+        validationErrors.map(e => {
+            toast.error(e);
+        });
+
+        return er;
     }
 
     toast.error(er?.response?.data?.message

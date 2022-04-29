@@ -3,7 +3,7 @@ import {Box, Button, FormControl, TextareaAutosize} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {postQuestion} from "../ApiService";
+import {postQuestion} from "../../services/ApiService";
 import ProgressComponent from "../ProgressComponent";
 import {trackPromise} from "react-promise-tracker";
 

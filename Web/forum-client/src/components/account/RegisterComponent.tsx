@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {FC, useState} from "react";
 import {Checkbox, FormControl, FormControlLabel, TextField} from "@mui/material";
-import {registerApi} from "../ApiService";
+import {registerApi} from "../../services/ApiService";
 import Typography from "@mui/material/Typography";
 import ProgressComponent from "../ProgressComponent";
 import {trackPromise} from "react-promise-tracker";

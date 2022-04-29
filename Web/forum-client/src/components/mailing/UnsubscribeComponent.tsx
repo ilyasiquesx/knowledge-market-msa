@@ -1,7 +1,7 @@
 import {FC} from "react";
 import {Box, Button} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
-import {putMailing} from "../ApiService";
+import {putMailing} from "../../services/ApiService";
 import {toast} from "react-toastify";
 
 const UnsubscribeComponent: FC = () => {

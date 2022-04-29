@@ -23,7 +23,7 @@ var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic
 
 builder.Services.AddControllers(opt =>
     {
-       opt.Filters.Add(typeof(ValidationFilter));
+        opt.Filters.Add(typeof(ValidationFilter));
         opt.Filters.Add(typeof(DomainExceptionFilterAttribute));
     })
     .AddFluentValidation();

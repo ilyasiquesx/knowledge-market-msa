@@ -2,7 +2,7 @@ import {FC, useEffect, useState} from "react";
 import {Box, Button} from "@mui/material";
 import LoginComponent from "./LoginComponent";
 import RegisterComponent from "./RegisterComponent";
-import {isAuthenticated} from "../UserService";
+import {isAuthenticated} from "../../services/UserService";
 
 
 const AccountComponent: FC = () => {

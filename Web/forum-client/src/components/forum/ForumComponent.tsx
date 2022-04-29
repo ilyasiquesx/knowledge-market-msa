@@ -3,11 +3,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {Grid, Pagination} from "@mui/material";
 import {Link as RouterLink, useNavigate} from "react-router-dom"
-import {getQuestions} from "../ApiService";
+import {getQuestions} from "../../services/ApiService";
 import Button from "@mui/material/Button";
 import ProgressComponent from "../ProgressComponent";
 import {trackPromise} from "react-promise-tracker";
-import {isAuthenticated} from "../UserService";
+import {isAuthenticated} from "../../services/UserService";
 
 interface Question {
     title: string,
@@ -45,7 +45,7 @@ const ForumComponent: FC = () => {
         const questionUpdateInternal = () => {
             questionsUpdate(paginationRequest)
         }
-        
+
         questionUpdateInternal();
     }, [])
 
@@ -53,14 +53,15 @@ const ForumComponent: FC = () => {
         trackPromise(getQuestions({
             page: pagination.page,
             pageSize: pagination.pageSize
-        }), 'fetch-service').then(r => {
-            setQuestions(r.data?.questions);
-            setPagesCount(r.data?.pageCount);
-        }).catch(() => setFetchError(true));
+        }), 'fetch-service')
+            .then(r => {
+                setQuestions(r.data?.questions);
+                setPagesCount(r.data?.pageCount);
+            })
+            .catch(() => setFetchError(true));
     }
 
-    function onAskQuestionClickHandler()
-    {
+    function onAskQuestionClickHandler() {
         if (isAuthenticated()) {
             navigate("/question/create")
         } else {
@@ -113,7 +114,8 @@ const ForumComponent: FC = () => {
                 </Grid>
                 <Grid item>
                     <Box>
-                        <Button variant="contained" sx={{margin: '5px'}} onClick={onAskQuestionClickHandler}>Ask a question</Button>
+                        <Button variant="contained" sx={{margin: '5px'}} onClick={onAskQuestionClickHandler}>Ask a
+                            question</Button>
                     </Box>
                 </Grid>
             </Grid>

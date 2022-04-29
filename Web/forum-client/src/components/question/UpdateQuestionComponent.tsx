@@ -3,8 +3,8 @@ import {Box, Button, FormControl, TextareaAutosize} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {getQuestionById, putQuestion} from "../ApiService";
-import {getUser} from "../UserService";
+import {getQuestionById, putQuestion} from "../../services/ApiService";
+import {getUser} from "../../services/UserService";
 
 export interface UpdateQuestionRequest {
     title: string,
@@ -27,13 +27,13 @@ const UpdateQuestionComponent: FC = () => {
         getQuestionById(id as string).then(r => {
 
             const data = r?.data;
-            const title = data.title;
+            const title = data?.title;
             const content = data?.content;
             const authorId = data?.author?.id;
             const bestAnswerId = data?.bestAnswer?.id;
 
             const user = getUser();
-            if (user.id !== authorId) {
+            if (user?.id !== authorId) {
                 navigate("/");
             }
 
@@ -54,7 +54,7 @@ const UpdateQuestionComponent: FC = () => {
     function onUpdateQuestionHandler() {
         putQuestion(id as string, updateQuestionRequest)
             .then((r) => {
-                if (r.status === 204) {
+                if (r?.status === 204) {
                     navigate(`/question/${id}`);
                 }
             })

@@ -6,11 +6,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {FC, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {clearUser, getUser, isAuthenticated} from "./UserService";
+import {clearUser, getUser, isAuthenticated} from "../services/UserService";
 import {Badge} from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import {trackPromise} from "react-promise-tracker";
-import {getNotifications} from "./ApiService";
+import {getNotifications} from "../services/ApiService";
 
 interface Notification {
     isRead: boolean,
@@ -29,7 +29,7 @@ const NavbarComponent: FC = () => {
 
     useEffect(() => {
         if (isAuthenticated()) {
-            trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r.data))
+            trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r?.data))
         }
     }, [])
 

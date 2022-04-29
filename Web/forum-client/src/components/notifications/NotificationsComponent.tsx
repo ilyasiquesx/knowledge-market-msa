@@ -1,8 +1,8 @@
 import {FC, useEffect, useState} from "react";
 import {Box, Button, Grid, Typography} from "@mui/material";
-import {isAuthenticated} from "../UserService";
+import {isAuthenticated} from "../../services/UserService";
 import {trackPromise} from "react-promise-tracker";
-import {getNotifications, putNotifications} from "../ApiService";
+import {getNotifications, putNotifications} from "../../services/ApiService";
 
 interface Notification {
     isRead: boolean,
@@ -33,7 +33,7 @@ const NotificationsComponent: FC = () => {
 
     function setNotifications() {
         if (isAuthenticated()) {
-            trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r.data))
+            trackPromise(getNotifications(), 'fetch-service').then(r => setNotification(r?.data))
         }
     }
 

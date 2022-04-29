@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import {useNavigate, useParams} from "react-router-dom"
 import Typography from "@mui/material/Typography";
 import {Grid, Pagination, TextareaAutosize} from "@mui/material";
-import {deleteAnswer, deleteQuestion, getQuestionById, postAnswer, putQuestion} from "../ApiService";
+import {deleteAnswer, deleteQuestion, getQuestionById, postAnswer, putQuestion} from "../../services/ApiService";
 import Button from "@mui/material/Button";
-import {isAuthenticated} from "../UserService";
+import {isAuthenticated} from "../../services/UserService";
 import ProgressComponent from "../ProgressComponent";
 import {trackPromise} from "react-promise-tracker";
 
@@ -59,7 +59,7 @@ const QuestionComponent: FC = () => {
     function onUpdateQuestion(body: any) {
         putQuestion(id as string, body)
             .then((r) => {
-                if (r.status === 204) {
+                if (r?.status === 204) {
                     getQuestion(id as string);
                 }
             });

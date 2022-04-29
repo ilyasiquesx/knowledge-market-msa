@@ -3,8 +3,8 @@ import {Box, Button, FormControl, TextareaAutosize} from "@mui/material";
 import {useNavigate, useParams} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {getAnswerById, putAnswer} from "../ApiService";
-import {getUser} from "../UserService";
+import {getAnswerById, putAnswer} from "../../services/ApiService";
+import {getUser} from "../../services/UserService";
 
 export interface EditAnswerRequest {
     content: string,
@@ -27,7 +27,7 @@ const EditAnswerComponent: FC = () => {
             const authorId = data?.authorId;
 
             const user = getUser();
-            if (user.id !== authorId) {
+            if (user?.id !== authorId) {
                 navigate("/");
             }
 
@@ -46,7 +46,7 @@ const EditAnswerComponent: FC = () => {
     function onUpdateAnswer() {
         putAnswer(id as string, editAnswerRequest)
             .then((r) => {
-                if (r.status === 204) {
+                if (r?.status === 204) {
                     navigate(`/question/${questionId}`);
                 }
             })
