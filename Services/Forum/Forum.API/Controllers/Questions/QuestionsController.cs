@@ -6,6 +6,7 @@ using Forum.Core.Entities.Questions.Queries.GetPaginated;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OneOf.Types;
 
 namespace Forum.API.Controllers.Questions;
 
@@ -49,7 +50,13 @@ public class QuestionsController : ApiController
     public async Task<IActionResult> Update(long id, UpdateQuestionCommand command)
     {
         command.Id = id;
-        await Mediator.Send(command);
-        return NoContent();
+        var result = await Mediator.Send(command);
+        var objectResult = result.Match<IActionResult>(
+            updated => NoContent(),
+            notFound => NotFound(notFound),
+            invalidUserId => BadRequest(invalidUserId),
+            userNotAllowed => BadRequest(userNotAllowed));
+
+        return objectResult;
     }
 }

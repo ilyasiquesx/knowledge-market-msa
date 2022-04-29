@@ -1,10 +1,12 @@
-﻿using Forum.Core.Services;
+﻿using Forum.Core.Entities.Questions.Results;
+using Forum.Core.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OneOf;
 
 namespace Forum.Core.Entities.Questions.Commands.Delete;
 
-public class DeleteQuestionCommand : IRequest
+public class DeleteQuestionCommand : IRequest<OneOf<Deleted, QuestionNotFound, InvalidUserId, UserNotAllowed>>
 {
     public long Id { get; }
 
@@ -14,7 +16,7 @@ public class DeleteQuestionCommand : IRequest
     }
 }
 
-public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionCommand>
+public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionCommand, OneOf<Deleted, QuestionNotFound, InvalidUserId, UserNotAllowed>>
 {
     private readonly IUserService _userService;
     private readonly IDomainContext _context;
@@ -27,18 +29,21 @@ public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionComman
         _eventService = eventService;
     }
 
-    public async Task<Unit> Handle(DeleteQuestionCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Deleted, QuestionNotFound, InvalidUserId, UserNotAllowed>> Handle(DeleteQuestionCommand request, CancellationToken cancellationToken)
     {
         var question = await _context.Questions
             .Include(q => q.Author)
             .FirstOrDefaultAsync(q => q.Id == request.Id, cancellationToken);
-        ThrowIf.Null(question, $"There is no question with such id: {request.Id}");
+        if (question == null)
+            return new QuestionNotFound(request.Id);
 
         var userId = _userService.UserId;
-        ThrowIf.NullOrEmpty(userId, "Author id must exist");
+        if (string.IsNullOrEmpty(userId))
+            return new InvalidUserId("User id must exist");
         
         var whetherUserIsAuthor = question!.Author.Id == userId;
-        ThrowIf.False(whetherUserIsAuthor, "You can't delete another user's question");
+        if(!whetherUserIsAuthor)
+            return new UserNotAllowed("You can't edit another user's question");
 
         _context.Questions.Remove(question);
         await _context.SaveChangesAsync(cancellationToken);
@@ -47,6 +52,6 @@ public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionComman
             question.Id
         });
         
-        return Unit.Value;
+        return new Deleted();
     }
 }
