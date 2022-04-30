@@ -16,29 +16,49 @@ public class AnswersController : ApiController
     [HttpPost]
     public async Task<IActionResult> Create(CreateAnswerCommand command)
     {
-        await Mediator.Send(command);
-        return Ok();
+        var result = await Mediator.Send(command);
+        var objectResult = result.Match<IActionResult>(
+            _ => Ok(),
+            validationResult => BadRequest(validationResult),
+            notFoundResult => NotFound(notFoundResult));
+
+        return objectResult;
     }
 
     [HttpPut("{id:long}")]
     public async Task<IActionResult> Update(long id, UpdateAnswerCommand command)
     {
         command.Id = id;
-        await Mediator.Send(command);
-        return NoContent();
+        var result = await Mediator.Send(command);
+        var objectResult = result.Match<IActionResult>(
+            _ => NoContent(),
+            validationResult => BadRequest(validationResult),
+            notFoundResult => NotFound(notFoundResult),
+            invalidState => BadRequest(invalidState));
+
+        return objectResult;
     }
 
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete(long id)
     {
-        await Mediator.Send(new DeleteAnswerCommand(id));
-        return Ok();
+        var result = await Mediator.Send(new DeleteAnswerCommand(id));
+        var objectResult = result.Match<IActionResult>(
+            _ => NoContent(),
+            notFoundResult => NotFound(notFoundResult),
+            invalidState => BadRequest(invalidState));
+
+        return objectResult;
     }
 
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
         var result = await Mediator.Send(new GetAnswerByIdQuery(id));
-        return Ok(result);
+        var objectResult = result.Match<IActionResult>(
+            dto => Ok(dto),
+            notFoundResult => NotFound(notFoundResult));
+
+        return objectResult;
     }
 }

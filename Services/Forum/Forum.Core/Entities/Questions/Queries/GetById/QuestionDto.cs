@@ -1,4 +1,4 @@
-﻿namespace Forum.Core.Entities.Questions.Queries.Get;
+﻿namespace Forum.Core.Entities.Questions.Queries.GetById;
 
 public class QuestionDto
 {

@@ -1,10 +1,12 @@
-﻿using Forum.Core.Services;
+﻿using Forum.Core.Results;
+using Forum.Core.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OneOf;
 
 namespace Forum.Core.Entities.Questions.Commands.Delete;
 
-public class DeleteQuestionCommand : IRequest
+public class DeleteQuestionCommand : IRequest<OneOf<Unit, NotFoundResult, InvalidDomainBehaviorResult>>
 {
     public long Id { get; }
 
@@ -14,31 +16,37 @@ public class DeleteQuestionCommand : IRequest
     }
 }
 
-public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionCommand>
+public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionCommand,
+    OneOf<Unit, NotFoundResult, InvalidDomainBehaviorResult>>
 {
     private readonly IUserService _userService;
     private readonly IDomainContext _context;
     private readonly IIntegrationEventService _eventService;
 
-    public DeleteQuestionCommandHandler(IUserService userService, IDomainContext context, IIntegrationEventService eventService)
+    public DeleteQuestionCommandHandler(IUserService userService, IDomainContext context,
+        IIntegrationEventService eventService)
     {
         _userService = userService;
         _context = context;
         _eventService = eventService;
     }
 
-    public async Task<Unit> Handle(DeleteQuestionCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Unit, NotFoundResult, InvalidDomainBehaviorResult>> Handle(DeleteQuestionCommand request,
+        CancellationToken cancellationToken)
     {
         var question = await _context.Questions
             .Include(q => q.Author)
             .FirstOrDefaultAsync(q => q.Id == request.Id, cancellationToken);
-        ThrowIf.Null(question, $"There is no question with such id: {request.Id}");
+        if (question == null)
+            return new NotFoundResult($"There is no question with such id: {request.Id}");
 
         var userId = _userService.UserId;
-        ThrowIf.NullOrEmpty(userId, "Author id must exist");
-        
-        var whetherUserIsAuthor = question!.Author.Id == userId;
-        ThrowIf.False(whetherUserIsAuthor, "You can't delete another user's question");
+        if (string.IsNullOrEmpty(userId))
+            return new InvalidDomainBehaviorResult("User id must exist");
+
+        var whetherUserIsAuthor = question.Author.Id == userId;
+        if (!whetherUserIsAuthor)
+            return new InvalidDomainBehaviorResult("You can't delete another user's question");
 
         _context.Questions.Remove(question);
         await _context.SaveChangesAsync(cancellationToken);
@@ -46,7 +54,7 @@ public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionComman
         {
             question.Id
         });
-        
+
         return Unit.Value;
     }
 }

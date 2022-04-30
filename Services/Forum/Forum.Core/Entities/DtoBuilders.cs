@@ -1,7 +1,7 @@
 ﻿using Forum.Core.Entities.Answers;
 using Forum.Core.Entities.Questions;
 using Forum.Core.Entities.Questions.Queries;
-using Forum.Core.Entities.Questions.Queries.Get;
+using Forum.Core.Entities.Questions.Queries.GetById;
 using Forum.Core.Entities.Questions.Queries.GetPaginated;
 using Forum.Core.Entities.Users;
 
@@ -24,9 +24,6 @@ public static class DtoBuilders
 
         public static AnswerDto BuildAnswerDto(Answer answer, string requestedBy)
         {
-            var doesAuthorPresent = !string.IsNullOrEmpty(answer.AuthorId) && answer.Author != null;
-            ThrowIf.False(doesAuthorPresent, "Answer can't has no author");
-
             return new AnswerDto
             {
                 Id = answer.Id,
