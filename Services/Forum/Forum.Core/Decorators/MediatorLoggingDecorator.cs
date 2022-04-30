@@ -21,7 +21,7 @@ public class MediatorLoggingDecorator : Mediator, IMediator
         CancellationToken cancellationToken = default)
     {
         var type = request.GetType().Name;
-        _logger.LogInformation("{Message} {RequestType} {@RequestBody}",
+        _logger.LogInformation("{Message} {RequestType} {@RequestItem}",
             "The request has started",
             type,
             request);
@@ -39,9 +39,10 @@ public class MediatorLoggingDecorator : Mediator, IMediator
         }
 
         var responseItemType = responseItem.GetType().Name;
-        _logger.LogInformation("{Message} {RequestType} {ResponseType} {@ResponseBody} {ElapsedMilliseconds}",
+        _logger.LogInformation("{Message} {RequestType} {@RequestBody} {ResponseType} {@ResponseItem} {MillisecondsSpent}",
             "The request has finished",
             type,
+            request,
             responseItemType,
             responseItem,
             sw.ElapsedMilliseconds);
