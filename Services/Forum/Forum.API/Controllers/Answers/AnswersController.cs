@@ -34,7 +34,7 @@ public class AnswersController : ApiController
             _ => NoContent(),
             validationResult => BadRequest(validationResult),
             notFoundResult => NotFound(notFoundResult),
-            invalidState => BadRequest(invalidState));
+            invalidBehavior => BadRequest(invalidBehavior));
 
         return objectResult;
     }
@@ -46,7 +46,7 @@ public class AnswersController : ApiController
         var objectResult = result.Match<IActionResult>(
             _ => NoContent(),
             notFoundResult => NotFound(notFoundResult),
-            invalidState => BadRequest(invalidState));
+            invalidBehavior => BadRequest(invalidBehavior));
 
         return objectResult;
     }

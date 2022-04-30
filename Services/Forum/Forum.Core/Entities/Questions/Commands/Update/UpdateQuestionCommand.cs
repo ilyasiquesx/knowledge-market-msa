@@ -8,7 +8,7 @@ using OneOf;
 
 namespace Forum.Core.Entities.Questions.Commands.Update;
 
-public class UpdateQuestionCommand : IRequest<OneOf<Unit, NotFoundResult, InvalidDomainBehaviorResult, ValidationResult>>
+public class UpdateQuestionCommand : IRequest<OneOf<Unit, ValidationResult, NotFoundResult, InvalidDomainBehaviorResult>>
 {
     [JsonIgnore]
     public long Id { get; set; }
@@ -17,7 +17,7 @@ public class UpdateQuestionCommand : IRequest<OneOf<Unit, NotFoundResult, Invali
     public long? BestAnswerId { get; set; }
 }
 
-public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionCommand, OneOf<Unit, NotFoundResult, InvalidDomainBehaviorResult, ValidationResult>>
+public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionCommand, OneOf<Unit, ValidationResult, NotFoundResult, InvalidDomainBehaviorResult>>
 {
     private readonly IUserService _userService;
     private readonly IDomainContext _context;
@@ -38,7 +38,7 @@ public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionComman
         _validator = validator;
     }
 
-    public async Task<OneOf<Unit, NotFoundResult, InvalidDomainBehaviorResult, ValidationResult>> Handle(UpdateQuestionCommand request, CancellationToken cancellationToken)
+    public async Task<OneOf<Unit, ValidationResult, NotFoundResult, InvalidDomainBehaviorResult>> Handle(UpdateQuestionCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)

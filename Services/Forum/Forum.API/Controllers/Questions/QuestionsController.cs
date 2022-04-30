@@ -23,7 +23,7 @@ public class QuestionsController : ApiController
         var objectResult = result.Match<IActionResult>(
             dto => Ok(dto),
             notFoundResult => NotFound(notFoundResult),
-            behaviorResult => NotFound(behaviorResult));
+            invalidBehavior => BadRequest(invalidBehavior));
         
         return objectResult;
     }
@@ -55,9 +55,9 @@ public class QuestionsController : ApiController
         var result = await Mediator.Send(command);
         var objectResult = result.Match<IActionResult>(
             _ => NoContent(),
-            notFound => NotFound(notFound),
-            invalidUserId => BadRequest(invalidUserId),
-            userNotAllowed => BadRequest(userNotAllowed));
+            validationResult => BadRequest(validationResult),
+            notFoundResult => NotFound(notFoundResult),
+            invalidBehavior => BadRequest(invalidBehavior));
 
         return objectResult;
     }
@@ -69,7 +69,7 @@ public class QuestionsController : ApiController
         var objectResult = result.Match<IActionResult>(
             _ => NoContent(), 
             notFoundResult => NotFound(notFoundResult),
-            behaviorResult => BadRequest(behaviorResult));
+            invalidBehavior => BadRequest(invalidBehavior));
         
         return objectResult;
     }
