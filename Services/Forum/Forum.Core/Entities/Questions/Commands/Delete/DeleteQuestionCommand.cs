@@ -46,7 +46,7 @@ public class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestionComman
 
         var whetherUserIsAuthor = question.Author.Id == userId;
         if (!whetherUserIsAuthor)
-            return new InvalidDomainBehaviorResult("You can't edit another user's question");
+            return new InvalidDomainBehaviorResult("You can't delete another user's question");
 
         _context.Questions.Remove(question);
         await _context.SaveChangesAsync(cancellationToken);
