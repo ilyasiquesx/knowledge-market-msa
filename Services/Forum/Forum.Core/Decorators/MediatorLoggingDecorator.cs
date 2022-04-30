@@ -40,7 +40,7 @@ public class MediatorLoggingDecorator : Mediator, IMediator
 
         var responseItemType = responseItem.GetType().Name;
         _logger.LogInformation("{Message} {RequestType} {@RequestBody} {ResponseType} {@ResponseItem} {MillisecondsSpent}",
-            "The request has finished",
+            $"The request has finished within {sw.ElapsedMilliseconds} ms",
             type,
             request,
             responseItemType,
