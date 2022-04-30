@@ -51,6 +51,9 @@ public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionComman
         if (question == null)
             return new NotFoundResult($"There is no question with such id: {request.Id}");
 
+        if (string.IsNullOrEmpty(question.AuthorId) || question.Author == null)
+            return new InvalidDomainBehaviorResult("Question must have an author");
+        
         var userId = _userService.UserId;
         if (string.IsNullOrEmpty(userId))
             return new InvalidDomainBehaviorResult("User id must exist");

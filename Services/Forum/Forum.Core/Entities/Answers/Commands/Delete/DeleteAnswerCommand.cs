@@ -30,6 +30,7 @@ public class DeleteAnswerCommandHandler : IRequestHandler<DeleteAnswerCommand, O
     public async Task<OneOf<Unit, NotFoundResult, InvalidDomainBehaviorResult>> Handle(DeleteAnswerCommand request, CancellationToken cancellationToken)
     {
         var answer = await _context.Answers
+            .Include(a => a.Author)
             .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
         if (answer == null)
             return new NotFoundResult($"There is no answer with such id: {request.Id}");

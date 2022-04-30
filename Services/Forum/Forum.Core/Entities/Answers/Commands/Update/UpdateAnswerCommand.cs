@@ -38,6 +38,7 @@ public class UpdateAnswerCommandHandler : IRequestHandler<UpdateAnswerCommand, O
             return new ValidationResult(validationResult.Errors.Select(e => e.ErrorMessage));
         
         var answer = await _context.Answers
+            .Include(a => a.Author)
             .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
         if (answer == null)
             return new NotFoundResult($"There is no answer with such id: {request.Id}");

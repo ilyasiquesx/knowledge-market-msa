@@ -67,7 +67,7 @@ public class QuestionsController : ApiController
     {
         var result = await Mediator.Send(new DeleteQuestionCommand(id));
         var objectResult = result.Match<IActionResult>(
-            _ => Ok(), 
+            _ => NoContent(), 
             notFoundResult => NotFound(notFoundResult),
             behaviorResult => BadRequest(behaviorResult));
         
