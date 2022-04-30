@@ -1,20 +1,23 @@
-﻿using Forum.Core.Services;
+﻿using Forum.Core.Results;
+using Forum.Core.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OneOf;
 
-namespace Forum.Core.Entities.Questions.Queries.Get;
+namespace Forum.Core.Entities.Questions.Queries.GetById;
 
-public class GetQuestionQuery : IRequest<QuestionDto>
+public class GetQuestionByIdQuery : IRequest<OneOf<QuestionDto, NotFoundResult, InvalidDomainBehaviorResult>>
 {
     public long Id { get; }
 
-    public GetQuestionQuery(long id)
+    public GetQuestionByIdQuery(long id)
     {
         Id = id;
     }
 }
 
-public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, QuestionDto>
+public class GetQuestionQueryHandler : IRequestHandler<GetQuestionByIdQuery,
+    OneOf<QuestionDto, NotFoundResult, InvalidDomainBehaviorResult>>
 {
     private readonly IDomainContext _context;
     private readonly IUserService _userService;
@@ -25,7 +28,8 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
         _userService = userService;
     }
 
-    public async Task<QuestionDto> Handle(GetQuestionQuery request, CancellationToken cancellationToken)
+    public async Task<OneOf<QuestionDto, NotFoundResult, InvalidDomainBehaviorResult>> Handle(GetQuestionByIdQuery request,
+        CancellationToken cancellationToken)
     {
         var question = await _context.Questions
             .Include(q => q.Answers)
@@ -34,13 +38,18 @@ public class GetQuestionQueryHandler : IRequestHandler<GetQuestionQuery, Questio
             .Include(q => q.Author)
             .FirstOrDefaultAsync(q => q.Id == request.Id, cancellationToken);
 
-        ThrowIf.Null(question, $"There is no question with such id: {request.Id}");
-        ThrowIf.Null(question!.Author, "Question author can't be null");
+        if (question == null)
+            return new NotFoundResult($"There is no question with such id: {request.Id}");
 
-        var author = question!.Author;
+        if (question.Author == null)
+            return new InvalidDomainBehaviorResult("The question must have an author");
+
+        var author = question.Author;
         var answers = question.Answers.OrderByDescending(a => a.CreatedAt).ToList();
-        var bestAnswer = question.BestAnswer;
+        if (answers.Any(a => string.IsNullOrEmpty(a.AuthorId) || a.Author == null))
+            return new InvalidDomainBehaviorResult($"The answer must have an author");
 
+        var bestAnswer = question.BestAnswer;
         AnswerDto bestAnswerDto = null;
         var requestedBy = _userService.UserId;
 

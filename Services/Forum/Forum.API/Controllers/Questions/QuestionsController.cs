@@ -1,12 +1,11 @@
 ﻿using Forum.Core.Entities.Questions.Commands.Create;
 using Forum.Core.Entities.Questions.Commands.Delete;
 using Forum.Core.Entities.Questions.Commands.Update;
-using Forum.Core.Entities.Questions.Queries.Get;
+using Forum.Core.Entities.Questions.Queries.GetById;
 using Forum.Core.Entities.Questions.Queries.GetPaginated;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OneOf.Types;
 
 namespace Forum.API.Controllers.Questions;
 
@@ -20,8 +19,13 @@ public class QuestionsController : ApiController
     [AllowAnonymous]
     public async Task<IActionResult> GetById(long id)
     {
-        var result = await Mediator.Send(new GetQuestionQuery(id));
-        return Ok(result);
+        var result = await Mediator.Send(new GetQuestionByIdQuery(id));
+        var objectResult = result.Match<IActionResult>(
+            dto => Ok(dto),
+            notFoundResult => NotFound(notFoundResult),
+            behaviorResult => NotFound(behaviorResult));
+        
+        return objectResult;
     }
 
     [HttpGet]
@@ -35,15 +39,13 @@ public class QuestionsController : ApiController
     [HttpPost]
     public async Task<IActionResult> Create(CreateQuestionCommand command)
     {
-        await Mediator.Send(command);
-        return Ok();
-    }
-
-    [HttpDelete("{id:long}")]
-    public async Task<IActionResult> Delete(long id)
-    {
-        await Mediator.Send(new DeleteQuestionCommand(id));
-        return Ok();
+        var result = await Mediator.Send(command);
+        var objectResult = result.Match<IActionResult>(
+            _ => Ok(),
+            validationResult => BadRequest(validationResult),
+            notFoundResult => NotFound(notFoundResult));
+        
+        return objectResult;
     }
 
     [HttpPut("{id:long}")]
@@ -52,11 +54,23 @@ public class QuestionsController : ApiController
         command.Id = id;
         var result = await Mediator.Send(command);
         var objectResult = result.Match<IActionResult>(
-            updated => NoContent(),
+            _ => NoContent(),
             notFound => NotFound(notFound),
             invalidUserId => BadRequest(invalidUserId),
             userNotAllowed => BadRequest(userNotAllowed));
 
+        return objectResult;
+    }
+    
+    [HttpDelete("{id:long}")]
+    public async Task<IActionResult> Delete(long id)
+    {
+        var result = await Mediator.Send(new DeleteQuestionCommand(id));
+        var objectResult = result.Match<IActionResult>(
+            _ => Ok(), 
+            notFoundResult => NotFound(notFoundResult),
+            behaviorResult => BadRequest(behaviorResult));
+        
         return objectResult;
     }
 }

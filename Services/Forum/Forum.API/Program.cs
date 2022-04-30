@@ -1,6 +1,5 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Forum.API;
 using Forum.API.BackgroundTasks;
 using Forum.API.Filters;
 using Forum.API.Middlewares;
@@ -24,7 +23,6 @@ var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic
 builder.Services.AddControllers(opt =>
     {
         opt.Filters.Add(typeof(ValidationFilter));
-        opt.Filters.Add(typeof(DomainExceptionFilterAttribute));
     })
     .AddFluentValidation();
 builder.Services.Configure<ApiBehaviorOptions>(opt => { opt.SuppressModelStateInvalidFilter = true; });
