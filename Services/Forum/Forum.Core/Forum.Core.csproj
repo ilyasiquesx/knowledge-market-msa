@@ -7,10 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="10.4.0" />
-      <PackageReference Include="MediatR" Version="10.0.1" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
-      <PackageReference Include="OneOf" Version="3.0.216" />
+        <PackageReference Include="FluentValidation" Version="10.4.0"/>
+        <PackageReference Include="MediatR" Version="10.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0"/>
+        <PackageReference Include="OneOf" Version="3.0.216"/>
+        <PackageReference Include="Scrutor" Version="4.1.0"/>
     </ItemGroup>
 
 </Project>

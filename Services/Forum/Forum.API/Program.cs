@@ -4,6 +4,7 @@ using Forum.API.BackgroundTasks;
 using Forum.API.Filters;
 using Forum.API.Middlewares;
 using Forum.API.Options;
+using Forum.Core.Decorators;
 using Forum.Core.Entities.Users.Notifications;
 using Forum.Core.Services;
 using Forum.Infrastructure.Data;
@@ -20,10 +21,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray();
 
-builder.Services.AddControllers(opt =>
-    {
-        opt.Filters.Add(typeof(ValidationFilter));
-    })
+builder.Services.AddControllers(opt => { opt.Filters.Add(typeof(ValidationFilter)); })
     .AddFluentValidation();
 builder.Services.Configure<ApiBehaviorOptions>(opt => { opt.SuppressModelStateInvalidFilter = true; });
 
@@ -32,6 +30,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ForumContext>(
     opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("ForumStorage")));
 builder.Services.AddMediatR(assemblies);
+
+builder.Services.Scan(sc =>
+{
+    sc.FromAssemblies(assemblies)
+        .AddClasses(c => c.AssignableTo<IMediator>())
+        .AsImplementedInterfaces()
+        .WithTransientLifetime();
+});
+builder.Services.Decorate<IMediator, MediatorLoggingDecorator>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
@@ -85,10 +93,13 @@ async Task MigrateDb(IApplicationBuilder appBuilder)
 {
     using var scope = appBuilder.ApplicationServices.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ForumContext>();
-    if (context.Database.IsRelational())
-        await context?.Database?.MigrateAsync();
+    if (context?.Database != null && context.Database.IsRelational())
+        await context.Database.MigrateAsync();
 }
 
-public partial class Program
+namespace Forum.API
 {
+    public class Program
+    {
+    }
 }

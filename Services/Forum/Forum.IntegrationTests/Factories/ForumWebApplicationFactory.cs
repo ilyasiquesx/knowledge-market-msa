@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using Forum.API;
 using Forum.API.Options;
 using Forum.Core.Entities.Questions;
 using Forum.Core.Entities.Users;
@@ -30,7 +31,7 @@ public class ForumWebApplicationFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureTestServices(cs =>
         {
-            var typesArray = new Type[]
+            var typesArray = new[]
             {
                 typeof(DbContextOptions<ForumContext>),
             };
@@ -58,8 +59,6 @@ public class ForumWebApplicationFactory : WebApplicationFactory<Program>
             var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
             SetJwtOptions(config);
         });
-
-        builder.ConfigureServices(cs => { });
     }
 
     public string GetToken(User user)
